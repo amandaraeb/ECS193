@@ -9,10 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+// Import communication protocol classes.
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 //Import ZXing classes
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
 
 public class BarMain extends AppCompatActivity implements OnClickListener {
 
@@ -63,4 +66,7 @@ public class BarMain extends AppCompatActivity implements OnClickListener {
             noDataWarning.show();
         }
     }
+
+    // Communication Protocol.
+
 }
