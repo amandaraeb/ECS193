@@ -1,0 +1,5 @@
+to run the webserver, type:
+
+python webserver2.py pyramid:app
+
+then go to localhost:8888/hello
