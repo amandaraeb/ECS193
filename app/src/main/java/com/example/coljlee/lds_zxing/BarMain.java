@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 // Import communication protocol classes.
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -28,10 +29,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BarMain extends AppCompatActivity implements OnClickListener {
 
     //BarMain widgets
-    private Button scanBtn;
+    private Button scanBtn, sendBtn;
     private TextView formatTxt, contentTxt;
 
     /**
@@ -47,22 +51,19 @@ public class BarMain extends AppCompatActivity implements OnClickListener {
 
         //Instantiate BarMain widgets
         scanBtn = (Button) findViewById(R.id.scan_button);
+        sendBtn = (Button) findViewById(R.id.send_button);
         formatTxt = (TextView) findViewById(R.id.scan_format);
         contentTxt = (TextView) findViewById(R.id.scan_content);
-        scanBtn.setOnClickListener(new OnClickListener()) {
-            @Override
-            public void onClick (View v){
-                // Making String object request.
-                HttpPOSTRequest(contentTxt);
-            }
-        } ;                       //Listen for scanBtn clicks'
+        scanBtn.setOnClickListener(this);                       //Listen for scanBtn clicks'
+        sendBtn.setOnClickListener(this);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // Custom StringRequest override.
-    private void HttpPOSTRequest(contentTxt) {
+    private void HttpPOSTRequest(String content) {
+        final String sendText = content;
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://localhost:80/";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -73,19 +74,19 @@ public class BarMain extends AppCompatActivity implements OnClickListener {
                     public void onResponse(String response) {
                         Log.d("Response", response);
                     }
-                };
-            new Response.ErrorListener() {
-                // This code is executed if there is an error.
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("ERROR", "error => " + error.toString());
+                },
+                new Response.ErrorListener() {
+                    // This code is executed if there is an error.
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR", "error => " + error.toString());
+                    }
                 }
-            }
-                ){
+                    ){
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("ISBN", contentTxt );
+                params.put("ISBN", sendText);
 
                 return params;
             }
@@ -99,6 +100,21 @@ public class BarMain extends AppCompatActivity implements OnClickListener {
         if (v.getId() == R.id.scan_button) {
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
             scanIntegrator.initiateScan(); //TODO: Scan only for book formats using args
+        }
+
+        //If send_button is clicked, send what's in the scan_content TextView
+        else if(v.getId()==R.id.send_button){
+            String isbn = contentTxt.getText().toString();
+
+            // If the TextView is empty, warn the user and do nothing
+            // Else there is something to send, so send it.
+            if(isbn.equals("")){
+                Toast noTextWarning = Toast.makeText(getApplicationContext(), "Nothing to send!", Toast.LENGTH_SHORT);
+                noTextWarning.show();
+            }
+            else {
+                HttpPOSTRequest(isbn);
+            }
         }
     }
 
