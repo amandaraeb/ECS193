@@ -7,17 +7,27 @@ import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 // Initialize RequestQueue.
 public class ApplicationController extends Application{
     // Log or request TAG.
-    public static final String TAG = "VolleyPatterns";
+    public static final String TAG = ApplicationController.class.getSimpleName();
+
     // A singleton instance of the application class for easy access in other places.
     private static ApplicationController sInstance;
+
     // Initialize queue.
-    private RequestQueue mRequestQueue = Volley.newRequestQueue(this);
+    private RequestQueue mRequestQueue;
 
     @Override
     public void onCreate() {
@@ -46,8 +56,7 @@ public class ApplicationController extends Application{
     // then it is used else Default TAG is used.
     public <T> void addToRequestQueue(Request<T> req, String tag){
         // Set the default tag if tag is empty.
-        req.setTag(TextUtils.isEmpty(tag)?TAG:tag);
-        VolleyLog.d("Adding request to queue: %s", req.getUrl());
+        req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
         getRequestQueue().add(req);
     }
 
