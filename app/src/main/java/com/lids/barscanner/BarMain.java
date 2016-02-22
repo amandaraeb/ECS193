@@ -53,6 +53,8 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
         //Set listener for buttons
         scanBtn.setOnClickListener(this);
         sendBtn.setOnClickListener(this);
+
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -66,7 +68,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){
-            String isbn = contentTxt.getText().toString();
+            String isbn = "isbn=1234"; //contentTxt.getText().toString();
             // If the TextView is empty, warn the user and do nothing
             // Else there is something to send, so send it.
             if(isbn.equals("")){
@@ -116,7 +118,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.coljlee.lds_zxing/http/host/path")
+                Uri.parse("android-app://com.lids.barscanner/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
     }
@@ -135,7 +137,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.coljlee.lds_zxing/http/host/path")
+                Uri.parse("android-app://com.lids.barscanner/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
@@ -143,9 +145,9 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
     // Custom StringRequest override.
     private void HttpPOSTRequest(String content) {
-        final String sendText = content;
+        //final String sendText = content;
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://localhost:80/";
+        String url = "http://amandaraeb.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.
@@ -166,7 +168,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("ISBN", sendText);
+                params.put("isbn", "isbn=1234");
 
                 return params;
             }
