@@ -1,7 +1,7 @@
 # ECS193
-Linked Data Scanner
+######Linked Data Scanner - Team LiDS
 
-#####INSTRUCTIONS FOR CLONING FROM GITHUB TO ANDROID STUDIO:
+####INSTRUCTIONS FOR CLONING FROM GITHUB TO ANDROID STUDIO:
 1. File->New->Project from Version Control->Github
     * NOTE: When the project is first cloned, it WILL fail! The volley submodule will not be loaded.
 2. View files using Project view (top left dropdown menu, make sure Project tab is open)

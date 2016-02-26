@@ -62,7 +62,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
         //If scan_button is clicked, begin scanning
         if (v.getId() == R.id.scan_button) {
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-            scanIntegrator.initiateScan(); //TODO: Scan only for book formats using args
+            scanIntegrator.initiateScan();
         }
         else if (v.getId() == R.id.settings_button) {
             Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
@@ -72,13 +72,13 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){
-            String isbn = "isbn=1234"; //contentTxt.getText().toString();
+            String isbn = "isbn=1234"; //"isbn=".concat(contentTxt.getText().toString());
             // If the TextView is empty, warn the user and do nothing
-            // Else there is something to send, so send it.
             if(isbn.equals("")){
                 Toast noTextWarning = Toast.makeText(getApplicationContext(), "Nothing to send!", Toast.LENGTH_SHORT);
                 noTextWarning.show();
             }
+            // Else there is something to send, so send it.
             else {
                 HttpPOSTRequest(isbn);
             }
@@ -91,17 +91,17 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
         //If there is a result, get the values and display them
-        //Else, display the warning Toast
         if (scanningResult != null) {
             //Get values
             String scanFormat = scanningResult.getFormatName();
             String scanContent = scanningResult.getContents();
 
             //Display values
-            //Use concat() to avoid Android warnings
             formatTxt.setText("FORMAT: ".concat(scanFormat));
             contentTxt.setText("ISBN: ".concat(scanContent));
-        } else {
+        }
+        //Else, display the warning Toast
+        else {
             Toast noDataWarning = Toast.makeText(getApplicationContext(), "No scan data received!", Toast.LENGTH_SHORT);
             noDataWarning.show();
         }
@@ -110,18 +110,11 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "BarMain Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "BarMain Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.lids.barscanner/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
@@ -130,17 +123,10 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "BarMain Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
+                Action.TYPE_VIEW,
+                "BarMain Page",
                 Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.lids.barscanner/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
@@ -159,6 +145,14 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
+                        if (response.contains("success")) {
+                            Toast sendSuccess = Toast.makeText(getApplicationContext(), "ISBN successfully sent!", Toast.LENGTH_SHORT);
+                            sendSuccess.show();
+                        }
+                        else{
+                            Toast sendFailure = Toast.makeText(getApplicationContext(), "Server unable to send ISBN!", Toast.LENGTH_LONG);
+                            sendFailure.show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -166,9 +160,12 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("ERROR", "error => " + error.toString());
+                        Toast sendError = Toast.makeText(getApplicationContext(), "BarScanner failed to send: ".concat(error.toString()), Toast.LENGTH_LONG);
+                        sendError.show();
                     }
                 }
         ){
+            //TODO: What is getParams for? How do we change it from needing a hardcoded string?
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
