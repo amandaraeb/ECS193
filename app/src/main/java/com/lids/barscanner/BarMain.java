@@ -68,22 +68,22 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){
-            String isbn = "isbn=1234"; //"isbn=".concat(contentTxt.getText().toString());
+            String rawIsbn = contentTxt.getText().toString().replace("ISBN: ", "");
+            String sendIsbn = "isbn=".concat(rawIsbn);
             // If the TextView is empty, warn the user and do nothing
-            if(isbn.equals("")){
+            if(sendIsbn.equals("")){
                 Toast noTextWarning = Toast.makeText(getApplicationContext(), "Nothing to send!", Toast.LENGTH_SHORT);
                 noTextWarning.show();
             }
             // Else there is something to send, so send it.
             else {
-                HttpPOSTRequest(isbn);
+                HttpPOSTRequest(sendIsbn);
             }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
         //If there is a result, get the values and display them
@@ -130,8 +130,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
     }
 
     // Custom StringRequest override.
-    private void HttpPOSTRequest(String content) {
-        //final String sendText = content;
+    private void HttpPOSTRequest(final String content) {
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://amandaraeb.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -165,7 +164,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("isbn", "isbn=1234");
+                params.put("isbn", content);
 
                 return params;
             }
