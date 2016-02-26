@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.coljlee.lds_zxing.BarMain">
+    tools:context="com.example.coljlee.lds_zxing.BarMain"
+    android:background="#FFFFFF">
 
     <Button
         android:layout_width="wrap_content"
@@ -43,4 +44,17 @@
         android:layout_alignTop="@+id/scan_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="61dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/settings_button"
+        android:src="@drawable/ic_setting_light"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/TFpassword"
+        android:layout_toEndOf="@+id/TFpassword"
+        android:background="#FFFFFF"
+        android:onClick="onClick" />
 </RelativeLayout>

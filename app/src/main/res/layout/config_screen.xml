@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Port"
+        android:id="@+id/textView3"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_weight="2"
+        android:layout_marginLeft="58dp"
+        android:layout_marginStart="58dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Configure Settings"
+        android:id="@+id/TFConfigTitle"
+        android:padding="25dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical|center|center_horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Configure"
+        android:id="@+id/configButton"
+        android:onClick="OnButtonClick"
+        android:layout_marginTop="67dp"
+        android:layout_below="@+id/TFport"
+        android:layout_toRightOf="@+id/defaultButton"
+        android:layout_toEndOf="@+id/defaultButton"
+        android:layout_marginLeft="70dp"
+        android:layout_marginStart="70dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Default"
+        android:id="@+id/defaultButton"
+        android:onClick="OnButtonClick"
+        android:layout_alignTop="@+id/configButton"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="5"
+        android:id="@+id/TFport"
+        android:maxLength="5"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_alignLeft="@+id/TFdomain"
+        android:layout_alignRight="@+id/configButton"
+        android:layout_alignEnd="@+id/configButton"
+        android:layout_alignParentTop="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:paddingRight="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="49dp"
+        android:layout_above="@+id/textView3"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:id="@+id/linearLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Domain"
+            android:id="@+id/textView4" />
+
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/TFdomain"
+        android:layout_alignTop="@+id/linearLayout"
+        android:layout_toRightOf="@+id/defaultButton"
+        android:layout_alignRight="@+id/linearLayout"
+        android:layout_alignEnd="@+id/linearLayout"
+        android:paddingRight="25dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ConfigBackBtn"
+        android:layout_alignBottom="@+id/TFConfigTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/linearLayout"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/linearLayout"
+        android:onClick="OnButtonClick" />
+
+
+</RelativeLayout>

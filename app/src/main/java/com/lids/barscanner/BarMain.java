@@ -64,6 +64,10 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
             scanIntegrator.initiateScan(); //TODO: Scan only for book formats using args
         }
+        else if (v.getId() == R.id.settings_button) {
+            Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
+            startActivity(intent);
+        }
 
 
         //If send_button is clicked, send what's in the scan_content TextView
