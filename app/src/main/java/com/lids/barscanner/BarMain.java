@@ -72,7 +72,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){
-            String isbn = "isbn=1234"; //"isbn=".concat(contentTxt.getText().toString());
+            String isbn = "isbn=".concat(contentTxt.getText().toString());
             // If the TextView is empty, warn the user and do nothing
             if(isbn.equals("")){
                 Toast noTextWarning = Toast.makeText(getApplicationContext(), "Nothing to send!", Toast.LENGTH_SHORT);
@@ -135,7 +135,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
     // Custom StringRequest override.
     private void HttpPOSTRequest(String content) {
-        //final String sendText = content;
+        final String sendISBN = content;
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://amandaraeb.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -169,7 +169,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("isbn", "isbn=1234");
+                params.put("isbn", sendISBN);
 
                 return params;
             }
