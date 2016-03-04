@@ -72,7 +72,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){
-            String isbn = "".concat(contentTxt.getText().toString());
+            String isbn = contentTxt.getText().toString().replace("ISBN: ", "");
             // If the TextView is empty, warn the user and do nothing
             if(isbn.equals("")){
                 Toast noTextWarning = Toast.makeText(getApplicationContext(), "Nothing to send!", Toast.LENGTH_SHORT);
@@ -98,7 +98,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
             //Display values
             formatTxt.setText("FORMAT: ".concat(scanFormat));
-            contentTxt.setText(scanContent);
+            contentTxt.setText("ISBN: ".concat(scanContent));
         }
         //Else, display the warning Toast
         else {
@@ -145,7 +145,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        /*if (!response.contains("failure")) {
+                        if (!response.contains("failure")) {
                             Toast sendSuccess = Toast.makeText(getApplicationContext(), "ISBN successfully sent!", Toast.LENGTH_SHORT);
                             sendSuccess.show();
                         }
@@ -153,9 +153,6 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
                             Toast sendFailure = Toast.makeText(getApplicationContext(), "Server unable to send ISBN!", Toast.LENGTH_LONG);
                             sendFailure.show();
                         }
-                        */
-                        Toast properlyNamedVars = Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT);
-                        properlyNamedVars.show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -171,7 +168,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             //TODO: What is getParams for? How do we change it from needing a hardcoded string?
             @Override
             protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
+                Map<String,String> params = new HashMap<>();
                 params.put("isbn", sendISBN);
                 return params;
             }
