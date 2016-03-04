@@ -1,5 +1,7 @@
 package com.lids.barscanner;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +58,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
         sendBtn.setOnClickListener(this);
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     @Override
@@ -64,11 +68,46 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
             scanIntegrator.initiateScan();
         }
+
+        //settings button Requires Administrative permission
         else if (v.getId() == R.id.settings_button) {
-            Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
-            startActivity(intent);
+
+            //pop up screen
+            final EditText password = new EditText(this);
+            new AlertDialog.Builder(this)
+                    .setTitle("Admin Password Required")
+                    .setMessage("Password")
+                    .setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            String pass = password.getText().toString();
+                            if (pass.equals("default")) {
+                                Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
+                                startActivity(intent);
+                            } else {
+                                Toast loginError = Toast.makeText(BarMain.this, "Incorrect password", Toast.LENGTH_SHORT);
+                                loginError.show();
+                            }
+                        }
+                    })
+                    //temporary skip function
+                    .setNeutralButton("Skip", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
+                    startActivity(intent);
+                }
+            })
+            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    })
+                            .show();
         }
 
+        //Search History
+        else if (v.getId() == R.id.history_button) {
+            Intent intent = new Intent(BarMain.this, SearchHistoryScreen.class);
+            startActivity(intent);
+        }
 
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){

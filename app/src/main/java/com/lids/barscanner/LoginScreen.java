@@ -14,7 +14,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.lids.barscanner.BarMain;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     public void onButtonClick(View v) {
-        if(v.getId() == R.id.loginButton) {
+        if(v.getId() == R.id.LoginButton) {
 
             // Get string info from user and password fields
             EditText TFid = (EditText)findViewById(R.id.TFusername);
@@ -34,9 +33,10 @@ public class LoginScreen extends AppCompatActivity {
             String TFid_str = TFid.getText().toString();
             String TFpass_str= TFpass.getText().toString();
 
-            // Hardcoded user and password for time being
+            //authenticate
             HttpPOSTRequest(TFid_str, TFpass_str);
 
+            // Hardcoded user and password for time being
             if(TFid_str.equals("admin") && TFpass_str.equals("default")) {
                 Intent intent = new Intent(LoginScreen.this, BarMain.class);
                 startActivity(intent);
@@ -47,6 +47,11 @@ public class LoginScreen extends AppCompatActivity {
                 Toast loginError = Toast.makeText(LoginScreen.this, "Incorrect ID or password", Toast.LENGTH_SHORT);
                 loginError.show();
             }
+        }
+
+        else if (v.getId() == R.id.creationButton) {
+            Intent intent = new Intent(LoginScreen.this, AccountCreation.class);
+            startActivity(intent);
         }
     }
 

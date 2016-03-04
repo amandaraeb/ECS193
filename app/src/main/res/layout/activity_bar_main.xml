@@ -55,4 +55,14 @@
         android:layout_toEndOf="@+id/TFpassword"
         android:background="#FFFFFF"
         android:onClick="onClick" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan History"
+        android:id="@+id/history_button"
+        android:layout_above="@id/settings_button"
+        android:layout_centerHorizontal="true"
+        android:singleLine="true"
+        android:onClick="onClick" />
 </RelativeLayout>
