@@ -24,7 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-//Import
+//Import Google Play Services
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -165,7 +165,6 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
                     }
                 }
         ){
-            //TODO: What is getParams for? How do we change it from needing a hardcoded string?
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
