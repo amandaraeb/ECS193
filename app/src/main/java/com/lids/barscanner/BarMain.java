@@ -69,6 +69,11 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             startActivity(intent);
         }
 
+        //Search History
+        else if (v.getId() == R.id.history_button) {
+            Intent intent = new Intent(BarMain.this, SearchHistoryScreen.class);
+            startActivity(intent);
+        }
 
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){
