@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:id="@+id/loginButton"
+        android:id="@+id/LoginButton"
         android:layout_gravity="center_vertical"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
@@ -32,8 +32,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/TFusername"
         android:layout_alignTop="@+id/textView"
-        android:layout_alignLeft="@+id/loginButton"
-        android:layout_alignStart="@+id/loginButton"
+        android:layout_alignLeft="@+id/LoginButton"
+        android:layout_alignStart="@+id/LoginButton"
         android:paddingRight="10dp"
         android:text="admin"
         android:layout_alignParentStart="false"
@@ -62,9 +62,9 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/TFpassword"
-        android:layout_above="@+id/loginButton"
-        android:layout_alignLeft="@+id/loginButton"
-        android:layout_alignStart="@+id/loginButton"
+        android:layout_above="@+id/LoginButton"
+        android:layout_alignLeft="@+id/LoginButton"
+        android:layout_alignStart="@+id/LoginButton"
         android:paddingRight="10dp"
         android:text="default"
         android:paddingLeft="10dp"
@@ -83,5 +83,16 @@
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="false"
         android:padding="30dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create New Account"
+        android:id="@+id/creationButton"
+        android:layout_below="@+id/LoginButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:onClick="onButtonClick"
+        android:nestedScrollingEnabled="false" />
 
 </RelativeLayout>
