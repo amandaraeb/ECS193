@@ -15,23 +15,21 @@
         android:layout_height="wrap_content"
         android:text="@string/scan"
         android:id="@+id/scan_button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="156dp" />
+        android:layout_above="@+id/send_button"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
         android:id="@+id/scan_format"
+        android:layout_marginTop="40dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp" />
+        android:layout_alignLeft="@+id/scan_content"
+        android:layout_alignStart="@+id/scan_content" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
         android:id="@+id/scan_content"
         android:layout_below="@+id/scan_format"
         android:layout_centerHorizontal="true" />
@@ -41,9 +39,9 @@
         android:layout_height="wrap_content"
         android:text="@string/sendIsbn"
         android:id="@+id/send_button"
-        android:layout_alignTop="@+id/scan_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="61dp" />
+        android:layout_marginBottom="33dp"
+        android:layout_above="@+id/settings_button"
+        android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:layout_width="wrap_content"
