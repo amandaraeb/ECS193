@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SearchHistoryScreen extends AppCompatActivity{
@@ -18,17 +20,15 @@ public class SearchHistoryScreen extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_screen);
 
-        //Handle book history
-        lv = (ListView) findViewById(R.id.BookList);    //find the list layout
-        List<String> books = new ArrayList<String>();   //initialize array "books"
-        books.add("0471190470");
-        books.add("8711075597");
-        books.add("3295038132");
-        books.add("5004991383");
+        Bundle extras = getIntent().getExtras();
+        String[] bookArray = extras.getStringArray("books");
 
-        //fill in the list
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, books);
-        lv.setAdapter(arrayAdapter);
+        //Handle book history
+        if(bookArray != null) {
+            lv = (ListView) findViewById(R.id.BookList);    //find the list layout
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bookArray);
+            lv.setAdapter(arrayAdapter);
+        }
     }
     public void OnButtonClick(View v) {
         if(v.getId() == R.id.HistBckButton) {
