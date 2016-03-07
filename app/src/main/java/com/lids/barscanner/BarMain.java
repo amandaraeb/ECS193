@@ -111,6 +111,9 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
 
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){
+            // Temporary parser until server can check flags.
+
+
             String isbn = contentTxt.getText().toString().replace("ISBN: ", "");
             // If the TextView is empty, warn the user and do nothing
             if(isbn.equals("")){
