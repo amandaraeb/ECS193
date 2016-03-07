@@ -32,6 +32,9 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,20 +45,24 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
     private TextView formatTxt, contentTxt;
     private GoogleApiClient client;
 
+    String[] bookArray = {"", "", "", "", "", "", "", "", "", ""};
+    int ISBN_location = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar_main);
-
         //Instantiate BarMain widgets
         scanBtn = (Button) findViewById(R.id.scan_button);
         sendBtn = (Button) findViewById(R.id.send_button);
         formatTxt = (TextView) findViewById(R.id.scan_format);
         contentTxt = (TextView) findViewById(R.id.scan_content);
 
+
         //Set listener for buttons
         scanBtn.setOnClickListener(this);
         sendBtn.setOnClickListener(this);
+
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
@@ -106,6 +113,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
         //Search History
         else if (v.getId() == R.id.history_button) {
             Intent intent = new Intent(BarMain.this, SearchHistoryScreen.class);
+            intent.putExtra("books", bookArray);
             startActivity(intent);
         }
 
@@ -122,6 +130,12 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             }
             // Else there is something to send, so send it.
             else {
+                //Save Into History
+                String date = DateFormat.getDateTimeInstance().format(new Date());
+                String isbn2 = isbn + "               " + date;
+                bookArray[ISBN_location] = isbn2;
+                ISBN_location++;
+
                 HttpPOSTRequest(isbn);
             }
         }
