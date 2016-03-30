@@ -190,7 +190,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
     private void HttpPOSTRequest(String content) {
         final String sendISBN = content;
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://amandaraeb.koding.io:8000";
+        String url = "http://ldsecs193.koding.io:8000";//"http://amandaraeb.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.

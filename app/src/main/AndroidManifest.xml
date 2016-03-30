@@ -15,7 +15,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".BarMain"> </activity>
+        <activity android:name=".BarMain"
+            android:configChanges="orientation|screenSize"
+        > </activity>
         <activity android:name=".AccountCreation"></activity>
         <activity android:name=".ConfigurationScreen"> </activity>
         <activity android:name=".SearchHistoryScreen"> </activity>
