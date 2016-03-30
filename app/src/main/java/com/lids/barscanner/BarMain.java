@@ -73,6 +73,8 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
         //If scan_button is clicked, begin scanning
         if (v.getId() == R.id.scan_button) {
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+            scanIntegrator.setCaptureActivity(ZxingCapture.class);
+            scanIntegrator.setOrientationLocked(false);
             scanIntegrator.initiateScan();
         }
 
