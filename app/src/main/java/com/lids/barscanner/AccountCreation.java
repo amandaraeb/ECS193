@@ -1,6 +1,8 @@
 package com.lids.barscanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,11 +27,16 @@ public class AccountCreation extends AppCompatActivity {
     }
     //back button
     public void OnClick(View v) {
+        //Android device manager -> data/data/com.lids.barscanner/shared_prefs/Accounts.xml
+        //To view xml file, navigate to the file then press the floppy disk icon at the top right
+        //saying "pull a file from the device" and save to the project.
+        SharedPreferences sharedpreferences = getSharedPreferences("Accounts", Context.MODE_PRIVATE);
         if (v.getId() == R.id.CreateBckButton) {
             Intent intent = new Intent(AccountCreation.this, LoginScreen.class);
             startActivity(intent);
         }
         else if (v.getId() == R.id.CreateAccount) {
+
             EditText TFid = (EditText)findViewById(R.id.Username);
             EditText TFpass = (EditText)findViewById(R.id.Password1);
             EditText TFpassConf = (EditText)findViewById(R.id.Password2);
@@ -37,10 +44,23 @@ public class AccountCreation extends AppCompatActivity {
             String TFpass_str= TFpass.getText().toString();                 //Password String
             String TFpassConf_str = TFpassConf.getText().toString();        //Password Confirm String
 
+
             //if password == password confirmation
             if(TFpass_str.equals(TFpassConf_str)) {
-                Intent intent = new Intent(AccountCreation.this, BarMain.class);
-                startActivity(intent);
+                String checker = sharedpreferences.getString(TFid_str, "available");
+                if(checker.equals("available")){                                    //if username not taken
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString(TFid_str, TFid_str);                           //Save username
+                    editor.putString(TFid_str + "PW", TFpass_str);                  //Save password
+                    editor.apply();
+
+                    Intent intent = new Intent(AccountCreation.this, BarMain.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast Fail = Toast.makeText(AccountCreation.this, "Username Already Exists", Toast.LENGTH_SHORT);
+                    Fail.show();
+                }
             }
 
             else

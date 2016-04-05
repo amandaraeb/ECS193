@@ -1,6 +1,8 @@
 package com.lids.barscanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,7 +27,16 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     public void onButtonClick(View v) {
+        //Android device manager -> data/data/com.lids.barscanner/shared_prefs/Accounts.xml
+        //To view xml file, navigate to the file then press the floppy disk icon at the top right
+        //saying "pull a file from the device" and save to the project.
+        SharedPreferences sharedpreferences = getSharedPreferences("Accounts", Context.MODE_PRIVATE);
         if(v.getId() == R.id.LoginButton) {
+            //Hardcode User:Admin  Password:default
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("admin", "admin");                           //Save username
+            editor.putString("admin" + "PW", "default");                  //Save password
+            editor.apply();
 
             // Get string info from user and password fields
             EditText TFid = (EditText)findViewById(R.id.TFusername);
@@ -34,10 +45,11 @@ public class LoginScreen extends AppCompatActivity {
             String TFpass_str= TFpass.getText().toString();
 
             //authenticate
-            HttpPOSTRequest(TFid_str, TFpass_str);
+            //HttpPOSTRequest(TFid_str, TFpass_str);
 
-            // Hardcoded user and password for time being
-            if(TFid_str.equals("admin") && TFpass_str.equals("default")) {
+            String username = sharedpreferences.getString(TFid_str, "failed");      // get username from file
+            String password = sharedpreferences.getString(TFid_str + "PW", "failed"); // get password from file
+            if(TFid_str.equals(username) && TFpass_str.equals(password)) {          //if user + pass combo exists
                 Intent intent = new Intent(LoginScreen.this, BarMain.class);
                 startActivity(intent);
             }

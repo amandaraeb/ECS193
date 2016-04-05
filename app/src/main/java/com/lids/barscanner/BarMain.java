@@ -99,6 +99,11 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
             scanIntegrator.initiateScan();
         }
 
+        else if (v.getId() == R.id.logout_button) {
+            Intent intent = new Intent(BarMain.this, LoginScreen.class);
+            startActivity(intent);
+        }
+
         //settings button Requires Administrative permission
         else if (v.getId() == R.id.settings_button) {
 
