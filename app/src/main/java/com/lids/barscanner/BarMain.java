@@ -1,8 +1,10 @@
 package com.lids.barscanner;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,21 +34,26 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BarMain extends AppCompatActivity implements View.OnClickListener {
+
+public class BarMain extends AppCompatActivity implements View.OnClickListener{
 
     //BarMain widgets
     private Button scanBtn, sendBtn;
     private TextView formatTxt, contentTxt;
     private GoogleApiClient client;
 
-    String[] bookArray = {"", "", "", "", "", "", "", "", "", ""};
-    int ISBN_location = 0;
+
+    //Android device manager -> data/data/com.lids.barscanner/shared_prefs/ScanHistory.xml
+    //To view xml file, navigate to the file then press the floppy disk icon at the top right
+    //saying "pull a file from the device" and save to the project.
+    public static final String ScanHistory = "ScanHistory";
+    public static final String NumberOfBooks = "NumberOfBooks";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,18 +65,32 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
         formatTxt = (TextView) findViewById(R.id.scan_format);
         contentTxt = (TextView) findViewById(R.id.scan_content);
 
-
         //Set listener for buttons
         scanBtn.setOnClickListener(this);
         sendBtn.setOnClickListener(this);
 
-
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
+        //check for resend from scan history
+        Bundle extras = getIntent().getExtras();
+        if(extras == null) {                //no resend
+            String reSend= null;
+        }
+        else {
+            String reSend = extras.getString("resend");
+            HttpPOSTRequest(reSend);        // resend ISBN
+        }
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)  {
+        //Android device manager -> data/data/com.lids.barscanner/shared_prefs/ScanHistory.xml
+        //To view xml file, navigate to the file then press the floppy disk icon at the top right
+        //saying "pull a file from the device" and save to the project.
+        SharedPreferences sharedpreferences = getSharedPreferences(ScanHistory, Context.MODE_PRIVATE);
+        int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
+        String key;     // key for ScanHistory ISBN's
+
         //If scan_button is clicked, begin scanning
         if (v.getId() == R.id.scan_button) {
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
@@ -115,7 +136,6 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
         //Search History
         else if (v.getId() == R.id.history_button) {
             Intent intent = new Intent(BarMain.this, SearchHistoryScreen.class);
-            intent.putExtra("books", bookArray);
             startActivity(intent);
         }
 
@@ -130,11 +150,16 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener {
             // Else there is something to send, so send it.
             else {
                 //Save Into History
-                String date = DateFormat.getDateTimeInstance().format(new Date());
-                String isbn2 = isbn + "               " + date;
-                bookArray[ISBN_location] = isbn2;
-                ISBN_location++;
+                String date = DateFormat.getDateTimeInstance().format(new Date());  // get timestamp
+                //isbn = "725539080";
+                String isbn2 = isbn + "               " + date;                     //ISBN + timestamp
+                key = Integer.toString(BookCount);
+                BookCount++;
 
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(key, isbn2);               //store ("key", "ISBN")
+                editor.putInt(NumberOfBooks, BookCount);    //store # of ISBNs
+                editor.apply();
                 HttpPOSTRequest(isbn);
             }
         }
