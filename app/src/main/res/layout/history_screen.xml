@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:rowCount="4"
-    android:columnCount="1">
+    android:columnCount="1"
+    android:background="#e5e3d7">
 
     <Button
         android:layout_width="74dp"
@@ -17,7 +18,8 @@
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
-        android:clickable="false" />
+        android:clickable="false"
+        android:background="@drawable/button_design" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -57,7 +59,8 @@
         android:headerDividersEnabled="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:clickable="true" />
+        android:clickable="true"
+        android:background="#b58686" />
 
     <Button
         android:layout_width="wrap_content"
@@ -67,7 +70,8 @@
         android:layout_alignBottom="@+id/HistBckButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="OnButtonClick" />
+        android:onClick="OnButtonClick"
+        android:background="@drawable/button_design" />
 
 
 </RelativeLayout>

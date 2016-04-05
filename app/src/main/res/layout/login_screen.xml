@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:weightSum="1"
-    android:background="#FFFFFF">
+    android:background="#e5e3d7">
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,7 +25,8 @@
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="42dp"
-        android:onClick="onButtonClick" />
+        android:onClick="onButtonClick"
+        android:background="@drawable/button_design" />
 
     <EditText
         android:layout_width="fill_parent"
@@ -93,6 +94,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="29dp"
         android:onClick="onButtonClick"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:background="@drawable/button_design" />
 
 </RelativeLayout>

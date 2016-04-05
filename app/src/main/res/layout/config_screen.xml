@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#e5e3d7">
 
     <TextView
         android:layout_width="wrap_content"
@@ -46,7 +46,8 @@
         android:layout_toRightOf="@+id/defaultButton"
         android:layout_toEndOf="@+id/defaultButton"
         android:layout_marginLeft="70dp"
-        android:layout_marginStart="70dp" />
+        android:layout_marginStart="70dp"
+        android:background="@drawable/button_design" />
 
     <Button
         android:layout_width="wrap_content"
@@ -56,7 +57,8 @@
         android:onClick="OnButtonClick"
         android:layout_alignTop="@+id/configButton"
         android:layout_alignLeft="@+id/textView3"
-        android:layout_alignStart="@+id/textView3" />
+        android:layout_alignStart="@+id/textView3"
+        android:background="@drawable/button_design" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -115,7 +117,7 @@
         android:nestedScrollingEnabled="false"
         android:scaleType="fitXY"
         android:layout_toLeftOf="@+id/linearLayout"
-        android:background="#FFFFFF" />
+        android:background="#b58686" />
 
 
 </RelativeLayout>

@@ -8,15 +8,18 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.coljlee.lds_zxing.BarMain"
-    android:background="#FFFFFF">
+    android:background="#e5e3d7">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/scan"
         android:id="@+id/scan_button"
+        android:background="@drawable/button_design"
         android:layout_above="@+id/send_button"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/send_button"
+        android:layout_alignStart="@+id/send_button"
+        android:layout_marginBottom="71dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,7 +44,8 @@
         android:id="@+id/send_button"
         android:layout_marginBottom="33dp"
         android:layout_above="@+id/settings_button"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_design" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -53,7 +57,7 @@
         android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/TFpassword"
         android:layout_toEndOf="@+id/TFpassword"
-        android:background="#FFFFFF"
+        android:background="#e5e3d7"
         android:onClick="onClick" />
 
     <Button
@@ -64,7 +68,8 @@
         android:singleLine="true"
         android:onClick="onClick"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_design" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -75,5 +80,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="onClick" />
+        android:onClick="onClick"
+        android:background="@drawable/button_design" />
 </RelativeLayout>
