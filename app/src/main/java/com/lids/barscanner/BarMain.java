@@ -230,7 +230,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
-                        if (!response.contains("failure")) {
+                        if (response.contains("added")) {
                             Toast sendSuccess = Toast.makeText(getApplicationContext(), "ISBN successfully sent!", Toast.LENGTH_SHORT);
                             sendSuccess.show();
                         }
@@ -253,6 +253,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
+                params.put("type", "book");
                 params.put("isbn", sendISBN);
                 return params;
             }

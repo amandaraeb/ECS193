@@ -24,41 +24,30 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
+
+        Bundle extras = getIntent().getExtras();
+        EditText TFid = (EditText)findViewById(R.id.TFusername);
+        EditText TFpass = (EditText)findViewById(R.id.TFpassword);
+
+        //Check for username/password from AccountCreation
+        if(extras != null) {
+            TFid.setText(extras.getString("newUsername"));
+            TFpass.setText(extras.getString("newPassword"));
+        }
+
+
     }
 
     public void onButtonClick(View v) {
-        //Android device manager -> data/data/com.lids.barscanner/shared_prefs/Accounts.xml
-        //To view xml file, navigate to the file then press the floppy disk icon at the top right
-        //saying "pull a file from the device" and save to the project.
-        SharedPreferences sharedpreferences = getSharedPreferences("Accounts", Context.MODE_PRIVATE);
         if(v.getId() == R.id.LoginButton) {
-            //Hardcode User:Admin  Password:default
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString("admin", "admin");                           //Save username
-            editor.putString("admin" + "PW", "default");                  //Save password
-            editor.apply();
-
             // Get string info from user and password fields
             EditText TFid = (EditText)findViewById(R.id.TFusername);
             EditText TFpass = (EditText)findViewById(R.id.TFpassword);
             String TFid_str = TFid.getText().toString();
             String TFpass_str= TFpass.getText().toString();
 
-            //authenticate
-            //HttpPOSTRequest(TFid_str, TFpass_str);
-
-            String username = sharedpreferences.getString(TFid_str, "failed");      // get username from file
-            String password = sharedpreferences.getString(TFid_str + "PW", "failed"); // get password from file
-            if(TFid_str.equals(username) && TFpass_str.equals(password)) {          //if user + pass combo exists
-                Intent intent = new Intent(LoginScreen.this, BarMain.class);
-                startActivity(intent);
-            }
-
-            // If user and password don't match -> error
-            else {
-                Toast loginError = Toast.makeText(LoginScreen.this, "Incorrect ID or password", Toast.LENGTH_SHORT);
-                loginError.show();
-            }
+            //Authenticate (Actions in onResponse in HttpPOSTRequest)
+            HttpPOSTRequest(TFid_str, TFpass_str);
         }
 
         else if (v.getId() == R.id.creationButton) {
@@ -69,7 +58,7 @@ public class LoginScreen extends AppCompatActivity {
 
     private void HttpPOSTRequest(final String username, final String password) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://amandaraeb.koding.io:8000";
+        String url = "http://ldsecs193.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.
@@ -77,6 +66,14 @@ public class LoginScreen extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
+                        if (response.contains("authentication successful")){
+                            Intent intent = new Intent(LoginScreen.this, BarMain.class);
+                            startActivity(intent);
+                        }
+                        else if (response.contains("incorrect password")){
+                            Toast incorrectPass = Toast.makeText(getApplicationContext(), "The password you entered was incorrect.", Toast.LENGTH_LONG);
+                            incorrectPass.show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -89,10 +86,11 @@ public class LoginScreen extends AppCompatActivity {
                     }
                 }
         ){
-            //TODO: What is getParams for? How do we change it from needing a hardcoded string?
+
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
+                params.put("type", "login");
                 params.put("user", username);
                 params.put("pass", password);
                 return params;

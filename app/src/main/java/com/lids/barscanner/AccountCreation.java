@@ -44,30 +44,13 @@ public class AccountCreation extends AppCompatActivity {
             String TFpass_str= TFpass.getText().toString();                 //Password String
             String TFpassConf_str = TFpassConf.getText().toString();        //Password Confirm String
 
-
-            //if password == password confirmation
-            if(TFpass_str.equals(TFpassConf_str)) {
-                String checker = sharedpreferences.getString(TFid_str, "available");
-                if(checker.equals("available")){                                    //if username not taken
-                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString(TFid_str, TFid_str);                           //Save username
-                    editor.putString(TFid_str + "PW", TFpass_str);                  //Save password
-                    editor.apply();
-
-                    Intent intent = new Intent(AccountCreation.this, BarMain.class);
-                    startActivity(intent);
-                }
-                else {
-                    Toast Fail = Toast.makeText(AccountCreation.this, "Username Already Exists", Toast.LENGTH_SHORT);
-                    Fail.show();
-                }
-            }
-
-            else
-            {
+            // User must confirm password
+            if (!TFpass_str.equals(TFpassConf_str)) {
                 Toast Fail = Toast.makeText(AccountCreation.this, "Passwords Do Not Match", Toast.LENGTH_SHORT);
                 Fail.show();
             }
+            else
+                HttpPOSTRequest(TFid_str, TFpass_str);
 
         }
 
@@ -75,7 +58,7 @@ public class AccountCreation extends AppCompatActivity {
 
     private void HttpPOSTRequest(final String username, final String password) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://amandaraeb.koding.io:8000";
+        String url = "http://ldsecs193.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.
@@ -83,6 +66,16 @@ public class AccountCreation extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
+                        if (response.contains("account added successfully")){
+                            Intent intent = new Intent(AccountCreation.this, LoginScreen.class);
+                            intent.putExtra("newUsername", username);
+                            intent.putExtra("newPassword", password);
+                            startActivity(intent);
+                        }
+                        else if (response.contains("username already exists")){
+                            Toast alreadyExists = Toast.makeText(getApplicationContext(), "That username already exists.", Toast.LENGTH_LONG);
+                            alreadyExists.show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -95,12 +88,12 @@ public class AccountCreation extends AppCompatActivity {
                     }
                 }
         ){
-            //TODO: What is getParams for? How do we change it from needing a hardcoded string?
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("user", username);
-                params.put("pass", password);
+                params.put("type", "createAcct");
+                params.put("newUser", username);
+                params.put("newPass", password);
                 return params;
             }
         };
