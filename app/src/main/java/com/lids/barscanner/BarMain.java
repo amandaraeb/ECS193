@@ -9,9 +9,17 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +44,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,12 +93,6 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v)  {
-        //Android device manager -> data/data/com.lids.barscanner/shared_prefs/ScanHistory.xml
-        //To view xml file, navigate to the file then press the floppy disk icon at the top right
-        //saying "pull a file from the device" and save to the project.
-        SharedPreferences sharedpreferences = getSharedPreferences(ScanHistory, Context.MODE_PRIVATE);
-        int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
-        String key;     // key for ScanHistory ISBN's
 
         //If scan_button is clicked, begin scanning
         if (v.getId() == R.id.scan_button) {
@@ -154,20 +157,52 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
             }
             // Else there is something to send, so send it.
             else {
+                //function call will have to be moved somewhere else once WorldCat parsing is implemented
+                SelectResult(isbn);     //Function for selecting from returned list of WorldCat ISBN's
+                HttpPOSTRequest(isbn);
+            }
+        }
+    }
+
+
+    public void SelectResult(String content) {
+        final ArrayList<String> ISBNs = new ArrayList<String>();
+        final SharedPreferences sharedpreferences = getSharedPreferences(ScanHistory, Context.MODE_PRIVATE);
+        //add scanned ISBN and dummy ISBNs to popup list
+        ISBNs.add(content);
+        ISBNs.add("123456789");
+        ISBNs.add("503957102");
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final AlertDialog alertDialog = alert.create();
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.worldcat_isbn_list, null);  //specify xml file for layout
+        alertDialog.setView(convertView);
+        alertDialog.setTitle("Select WorldCat ISBN");
+        ListView lv = (ListView) convertView.findViewById(R.id.listView1);      //grab list from xml
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, ISBNs);   //fill list with our ISBNs
+        lv.setAdapter(adapter);
+        alertDialog.show();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {       // checks for clicks on ISBN's in the list
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                String key;                                 // key for ScanHistory ISBN's
+                String result = ISBNs.get(position);        // store list entry that is clicked
+                int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
                 //Save Into History
                 String date = DateFormat.getDateTimeInstance().format(new Date());  // get timestamp
-                //isbn = "725539080";
-                String isbn2 = isbn + "               " + date;                     //ISBN + timestamp
+                String isbn = result + "               " + date;                    // ISBN + timestamp
                 key = Integer.toString(BookCount);
                 BookCount++;
 
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(key, isbn2);               //store ("key", "ISBN")
-                editor.putInt(NumberOfBooks, BookCount);    //store # of ISBNs
+                editor.putString(key, isbn);               // store ("key", "ISBN")
+                editor.putInt(NumberOfBooks, BookCount);   // store # of ISBNs
                 editor.apply();
-                HttpPOSTRequest(isbn);
+                alertDialog.cancel();                      // remove the popup
             }
-        }
+        });
+
     }
 
     @Override
@@ -221,6 +256,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
     // Custom StringRequest override.
     private void HttpPOSTRequest(String content) {
         final String sendISBN = content;
+
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://ldsecs193.koding.io:8000";//"http://amandaraeb.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -232,7 +268,15 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                         Log.d("Response", response);
                         if (response.contains("added")) {
                             Toast sendSuccess = Toast.makeText(getApplicationContext(), "ISBN successfully sent!", Toast.LENGTH_SHORT);
+
+                            //temporary checkmark popup. Moving/fixing it later
+                            Animation fadeOut = new AlphaAnimation(1, 0);
+                            fadeOut.setInterpolator(new DecelerateInterpolator());
+                            fadeOut.setDuration(3500);
+                            ImageView imageView = (ImageView) findViewById(R.id.CheckMark);
+                            imageView.setImageResource(R.drawable.checkmark);
                             sendSuccess.show();
+                            imageView.startAnimation((fadeOut));
                         }
                         else{
                             Toast sendFailure = Toast.makeText(getApplicationContext(), "Server unable to send ISBN!", Toast.LENGTH_LONG);

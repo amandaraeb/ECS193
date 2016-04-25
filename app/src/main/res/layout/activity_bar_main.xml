@@ -82,4 +82,15 @@
         android:layout_alignParentStart="true"
         android:onClick="onClick"
         android:background="@drawable/button_design" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/CheckMark"
+        android:src="@drawable/checkmark"
+        android:layout_alignBottom="@+id/send_button"
+        android:layout_alignRight="@+id/settings_button"
+        android:layout_alignEnd="@+id/settings_button"
+        android:visibility="invisible" />
+
 </RelativeLayout>
