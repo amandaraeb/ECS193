@@ -10,6 +10,27 @@
     tools:context="com.example.coljlee.lds_zxing.BarMain"
     android:background="#e5e3d7">
 
+
+    <ProgressBar
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="100dp"
+        android:id="@+id/progressBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminateDrawable="@drawable/circular_waiting_bar"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkmark"
+        android:src="@drawable/checkmark"
+        android:visibility="invisible"
+        android:layout_below="@+id/scan_format"
+        android:layout_centerHorizontal="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,14 +104,6 @@
         android:onClick="onClick"
         android:background="@drawable/button_design" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/CheckMark"
-        android:src="@drawable/checkmark"
-        android:layout_alignBottom="@+id/send_button"
-        android:layout_alignRight="@+id/settings_button"
-        android:layout_alignEnd="@+id/settings_button"
-        android:visibility="invisible" />
+
 
 </RelativeLayout>

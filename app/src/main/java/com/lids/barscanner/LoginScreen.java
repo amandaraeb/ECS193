@@ -47,6 +47,8 @@ public class LoginScreen extends AppCompatActivity {
             String TFpass_str= TFpass.getText().toString();
 
             //Authenticate (Actions in onResponse in HttpPOSTRequest)
+            //Intent intent = new Intent(LoginScreen.this, BarMain.class);
+            //startActivity(intent);
             HttpPOSTRequest(TFid_str, TFpass_str);
         }
 
