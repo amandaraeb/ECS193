@@ -20,40 +20,25 @@
         android:text="Create Account"
         android:id="@+id/CreateAccount"
         android:onClick="OnClick"
-        android:layout_marginBottom="74dp"
         android:background="@drawable/button_design"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/textView5"
-        android:layout_alignStart="@+id/textView5" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Link Data Scanner"
-        android:id="@+id/TFlogin_title"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="false"
-        android:padding="30dp"
-        android:textColor="#FFFFFF"
-        android:textAlignment="center" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="26dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Username"
-        android:id="@+id/textView"
-        android:layout_marginTop="83dp"
-        android:paddingLeft="10dp"
+        android:text="Link Data Scanner"
+        android:id="@+id/TFlogin_title"
+        android:layout_alignWithParentIfMissing="false"
+        android:padding="30dp"
         android:textColor="#FFFFFF"
-        android:textSize="18dp"
-        android:layout_below="@+id/TFlogin_title"
-        android:layout_alignLeft="@+id/textView5"
-        android:layout_alignStart="@+id/textView5" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:layout_alignParentStart="false" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -61,13 +46,15 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Password"
         android:id="@+id/textView2"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="60dp"
         android:paddingLeft="10dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignRight="@+id/textView"
-        android:layout_alignEnd="@+id/textView"
         android:textColor="#FFFFFF"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        android:layout_below="@+id/TFlogin_title"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_marginLeft="34dp"
+        android:layout_marginStart="34dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -75,17 +62,16 @@
         android:id="@+id/Username"
         android:background="@drawable/textbox"
         android:singleLine="true"
-        android:layout_alignTop="@+id/textView"
-        android:layout_toRightOf="@+id/textView5"
+        android:text="admin"
         android:textAlignment="center"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/textView2"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginRight="50dp"
         android:paddingEnd="21dp"
         android:paddingStart="21dp"
-        android:text="admin" />
+        android:layout_alignStart="@+id/TFlogin_title"
+        android:layout_above="@+id/Password1"
+        android:layout_marginBottom="30dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -111,15 +97,14 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Confirm Password"
         android:id="@+id/textView5"
-        android:layout_marginTop="62dp"
+        android:layout_marginTop="34dp"
         android:paddingLeft="10dp"
-        android:layout_below="@+id/Password1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:textColor="#FFFFFF"
         android:textIsSelectable="false"
         android:textSize="18dp"
-        android:layout_marginLeft="5dp" />
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -129,13 +114,25 @@
         android:ems="10"
         android:id="@+id/Password2"
         android:layout_alignBottom="@+id/textView5"
-        android:layout_toRightOf="@+id/textView5"
         android:singleLine="true"
-        android:layout_marginLeft="10dp"
         android:password="true"
         android:paddingEnd="21dp"
         android:paddingStart="21dp"
+        android:layout_alignLeft="@+id/TFlogin_title"
+        android:layout_alignStart="@+id/TFlogin_title"
+        android:layout_marginBottom="3dp"
         android:layout_alignRight="@+id/Password1"
         android:layout_alignEnd="@+id/Password1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:id="@+id/textView6"
+        android:textColor="#FFFFFF"
+        android:textSize="18dp"
+        android:layout_alignTop="@+id/Username"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2" />
 
 </RelativeLayout>

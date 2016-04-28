@@ -3,11 +3,13 @@ package com.lids.barscanner;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,6 +26,10 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Atelier Omega.ttf");
+        TextView titleName = (TextView) findViewById(R.id.TFlogin_title);
+        titleName.setTypeface(font);
 
         Bundle extras = getIntent().getExtras();
         EditText TFid = (EditText)findViewById(R.id.TFusername);
@@ -45,9 +51,14 @@ public class LoginScreen extends AppCompatActivity {
             EditText TFpass = (EditText)findViewById(R.id.TFpassword);
             String TFid_str = TFid.getText().toString();
             String TFpass_str= TFpass.getText().toString();
-
+            System.out.println(TFid_str + "   " + TFpass_str);
             //Authenticate (Actions in onResponse in HttpPOSTRequest)
-            HttpPOSTRequest(TFid_str, TFpass_str);
+
+            //HttpPOSTRequest(TFid_str, TFpass_str);
+            if(TFid_str.equals("admin") && TFpass_str.equals("default"))  {
+                Intent intent = new Intent(LoginScreen.this, BarMain.class);
+                startActivity(intent);
+            }
         }
 
         else if (v.getId() == R.id.creationButton) {
