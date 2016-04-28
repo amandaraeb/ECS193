@@ -73,7 +73,8 @@
         android:paddingRight="10dp"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/TFdomain"
-        android:layout_alignStart="@+id/TFdomain" />
+        android:layout_alignStart="@+id/TFdomain"
+        android:textColor="#FFFFFF" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,7 +103,8 @@
         android:layout_toRightOf="@+id/defaultButton"
         android:layout_alignRight="@+id/linearLayout"
         android:layout_alignEnd="@+id/linearLayout"
-        android:paddingRight="25dp" />
+        android:paddingRight="25dp"
+        android:textColor="#FFFFFF" />
 
     <ImageButton
         android:layout_width="wrap_content"

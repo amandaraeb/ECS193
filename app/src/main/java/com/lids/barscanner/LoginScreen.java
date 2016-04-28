@@ -52,13 +52,9 @@ public class LoginScreen extends AppCompatActivity {
             String TFid_str = TFid.getText().toString();
             String TFpass_str= TFpass.getText().toString();
             System.out.println(TFid_str + "   " + TFpass_str);
-            //Authenticate (Actions in onResponse in HttpPOSTRequest)
 
-            //HttpPOSTRequest(TFid_str, TFpass_str);
-            if(TFid_str.equals("admin") && TFpass_str.equals("default"))  {
-                Intent intent = new Intent(LoginScreen.this, BarMain.class);
-                startActivity(intent);
-            }
+            //Authenticate (Actions in onResponse in HttpPOSTRequest)
+            HttpPOSTRequest(TFid_str, TFpass_str);
         }
 
         else if (v.getId() == R.id.creationButton) {

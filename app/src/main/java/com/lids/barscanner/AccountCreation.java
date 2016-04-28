@@ -3,11 +3,13 @@ package com.lids.barscanner;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,6 +26,10 @@ public class AccountCreation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acc_create_screen);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Atelier Omega.ttf");
+        TextView titleName = (TextView) findViewById(R.id.TFlogin_title);
+        titleName.setTypeface(font);
     }
     //back button
     public void OnClick(View v) {

@@ -8,10 +8,21 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,9 +47,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 
 public class BarMain extends AppCompatActivity implements View.OnClickListener{
@@ -84,12 +98,6 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v)  {
-        //Android device manager -> data/data/com.lids.barscanner/shared_prefs/ScanHistory.xml
-        //To view xml file, navigate to the file then press the floppy disk icon at the top right
-        //saying "pull a file from the device" and save to the project.
-        SharedPreferences sharedpreferences = getSharedPreferences(ScanHistory, Context.MODE_PRIVATE);
-        int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
-        String key;     // key for ScanHistory ISBN's
 
         //If scan_button is clicked, begin scanning
         if (v.getId() == R.id.scan_button) {
@@ -147,6 +155,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         //If send_button is clicked, send what's in the scan_content TextView
         else if(v.getId()==R.id.send_button){
             String isbn = contentTxt.getText().toString().replace("ISBN: ", "");
+            //isbn = "123456789"; //dummy isbn for testing on virtual phone
             // If the TextView is empty, warn the user and do nothing
             if(isbn.equals("")){
                 Toast noTextWarning = Toast.makeText(getApplicationContext(), "Nothing to send!", Toast.LENGTH_SHORT);
@@ -154,20 +163,77 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
             }
             // Else there is something to send, so send it.
             else {
+                //function call will have to be moved somewhere else once WorldCat parsing is implemented
+                SelectResult(isbn);     //Function for selecting from returned list of WorldCat ISBN's
+
+                //HttpPOSTRequest(isbn);
+            }
+        }
+    }
+
+
+    public void SelectResult(String content) {
+        //load history file
+        final SharedPreferences sharedpreferences = getSharedPreferences(ScanHistory, Context.MODE_PRIVATE);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final AlertDialog alertDialog = alert.create();
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.worldcat_isbn_list, null);  //specify xml file for layout
+        alertDialog.setView(convertView);
+        alertDialog.setTitle("           Select OCLC ISBN");
+        ListView lv = (ListView) convertView.findViewById(R.id.listView1);      //grab list from xml
+
+        //create a List of Maps holding <title, info> pairs
+        final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        //Create some temp maps holding OCLC book data
+        final Map<String, String> datum = new HashMap<String, String>(2);
+        datum.put("title", "162596101");
+        datum.put("info", "Curves and Surfaces, Gerald E Farin\nSan Francisco CA:Morgan Kaufmann\nLondon:Academic Press,©2002");
+        data.add(datum);
+        Map<String, String> datum2 = new HashMap<String, String>(2);
+        datum2.put("title", "248043606");
+        datum2.put("info", "Curves and Surfaces, Gerald Farin\nSan Francisco, Calif:Morgan Kaufmann Publ,2002");
+        data.add(datum2);
+        Map<String, String> datum3 = new HashMap<String, String>(2);
+        datum3.put("title", "254200301");
+        datum3.put("info","Curves and Surfaces, Gerald Farin\nSan Francisco, Calif:Morgan Kaufmann Publ,2006");
+        data.add(datum3);
+        Map<String, String> datum4 = new HashMap<String, String>(2);
+        datum4.put("title", "300381010");
+        datum4.put("info","Curves and Surfaces, Gerald E Farin\nSan Francisco Calif:M Kaufmann,©2002");
+        data.add(datum4);
+
+        //add Maps to the display list
+        SimpleAdapter adapter = new SimpleAdapter(this, data,
+                android.R.layout.simple_list_item_2,
+                new String[] {"title", "info"},
+                new int[] {android.R.id.text1,
+                        android.R.id.text2});
+
+        lv.setAdapter(adapter);
+        alertDialog.show();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {       // checks for clicks on ISBN's in the list
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                String key;                                 // key for ScanHistory ISBN's
+                Map<String, String> clicked = data.get(position);   //get the <title, info> pair for the position clicked
+                String result = clicked.get("title");               //store the <title> portion holding OCLC number
+                int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
                 //Save Into History
-                String date = DateFormat.getDateTimeInstance().format(new Date());  // get timestamp
-                //isbn = "725539080";
-                String isbn2 = isbn + "               " + date;                     //ISBN + timestamp
+                String date = DateFormat.getDateTimeInstance().format(new Date());    // get timestamp
+                String isbn = result + "               " + date;                    // OCLC + timestamp
                 key = Integer.toString(BookCount);
                 BookCount++;
 
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(key, isbn2);               //store ("key", "ISBN")
-                editor.putInt(NumberOfBooks, BookCount);    //store # of ISBNs
+                editor.putString(key, isbn);               // store ("key", "ISBN")
+                editor.putInt(NumberOfBooks, BookCount);   // store # of ISBNs
                 editor.apply();
-                HttpPOSTRequest(isbn);
+                alertDialog.cancel();                      // remove the popup
+                HttpPOSTRequest(result);
             }
-        }
+        });
+
     }
 
     @Override
@@ -221,6 +287,11 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
     // Custom StringRequest override.
     private void HttpPOSTRequest(String content) {
         final String sendISBN = content;
+        //display loading spinner
+        final ProgressBar spinner;
+        spinner=(ProgressBar)findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
+
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://ldsecs193.koding.io:8000";//"http://amandaraeb.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -232,9 +303,31 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                         Log.d("Response", response);
                         if (response.contains("added")) {
                             Toast sendSuccess = Toast.makeText(getApplicationContext(), "ISBN successfully sent!", Toast.LENGTH_SHORT);
+
+                            Animation fadeIn = new AlphaAnimation(0, 1);
+                            final Animation fadeOut = new AlphaAnimation(1, 0);
+                            fadeIn.setInterpolator(new DecelerateInterpolator());
+                            fadeOut.setInterpolator(new DecelerateInterpolator());
+                            fadeIn.setDuration(2000);
+                            fadeOut.setDuration(3000);
+                            final ImageView imageView = (ImageView) findViewById(R.id.checkmark);
+                            imageView.setImageResource(R.drawable.checkmark);
+                            spinner.setVisibility(View.INVISIBLE);
                             sendSuccess.show();
+                            imageView.startAnimation((fadeIn));
+                            // Execute fade out after 2 seconds have passed
+                            Handler timeoutHandler = new Handler();
+
+                            timeoutHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imageView.startAnimation((fadeOut));
+                                }
+                            }, 2000);
+
                         }
                         else{
+                            spinner.setVisibility(View.INVISIBLE);
                             Toast sendFailure = Toast.makeText(getApplicationContext(), "Server unable to send ISBN!", Toast.LENGTH_LONG);
                             sendFailure.show();
                         }
@@ -244,6 +337,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                     // This code is executed if there is an error.
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        spinner.setVisibility(View.INVISIBLE);
                         Log.d("ERROR", "error => " + error.toString());
                         Toast sendError = Toast.makeText(getApplicationContext(), "BarScanner failed to send: ".concat(error.toString()), Toast.LENGTH_LONG);
                         sendError.show();

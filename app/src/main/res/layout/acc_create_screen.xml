@@ -39,7 +39,8 @@
         android:layout_alignParentLeft="false"
         android:padding="30dp"
         android:textColor="#FFFFFF"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="35dp" />
 
     <TextView
         android:layout_width="wrap_content"
