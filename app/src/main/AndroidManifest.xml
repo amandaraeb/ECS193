@@ -8,17 +8,32 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginScreen">
+        <activity
+            android:name=".SplashScreen"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".BarMain"> </activity>
-        <activity android:name=".AccountCreation"></activity>
-        <activity android:name=".ConfigurationScreen"> </activity>
-        <activity android:name=".SearchHistoryScreen"> </activity>
+        <activity
+            android:name=".BarMain"
+            android:configChanges="orientation|screenSize"
+            >
+        </activity>
+        <activity android:name=".LoginScreen" />
+        <activity android:name=".AccountCreation" />
+        <activity android:name=".ConfigurationScreen" />
+        <activity android:name=".SearchHistoryScreen" />
+        <activity
+            android:name=".ZxingCapture"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            >
+        </activity>
     </application>
 
 </manifest>

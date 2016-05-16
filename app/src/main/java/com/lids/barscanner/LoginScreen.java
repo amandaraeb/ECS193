@@ -1,11 +1,15 @@
 package com.lids.barscanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -22,31 +26,35 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Atelier Omega.ttf");
+        TextView titleName = (TextView) findViewById(R.id.TFlogin_title);
+        titleName.setTypeface(font);
+
+        Bundle extras = getIntent().getExtras();
+        EditText TFid = (EditText)findViewById(R.id.TFusername);
+        EditText TFpass = (EditText)findViewById(R.id.TFpassword);
+
+        //Check for username/password from AccountCreation
+        if(extras != null) {
+            TFid.setText(extras.getString("newUsername"));
+            TFpass.setText(extras.getString("newPassword"));
+        }
+
+
     }
 
     public void onButtonClick(View v) {
         if(v.getId() == R.id.LoginButton) {
-
             // Get string info from user and password fields
             EditText TFid = (EditText)findViewById(R.id.TFusername);
             EditText TFpass = (EditText)findViewById(R.id.TFpassword);
             String TFid_str = TFid.getText().toString();
             String TFpass_str= TFpass.getText().toString();
+            System.out.println(TFid_str + "   " + TFpass_str);
 
-            //authenticate
+            //Authenticate (Actions in onResponse in HttpPOSTRequest)
             HttpPOSTRequest(TFid_str, TFpass_str);
-
-            // Hardcoded user and password for time being
-            if(TFid_str.equals("admin") && TFpass_str.equals("default")) {
-                Intent intent = new Intent(LoginScreen.this, BarMain.class);
-                startActivity(intent);
-            }
-
-            // If user and password don't match -> error
-            else {
-                Toast loginError = Toast.makeText(LoginScreen.this, "Incorrect ID or password", Toast.LENGTH_SHORT);
-                loginError.show();
-            }
         }
 
         else if (v.getId() == R.id.creationButton) {
@@ -57,7 +65,7 @@ public class LoginScreen extends AppCompatActivity {
 
     private void HttpPOSTRequest(final String username, final String password) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://amandaraeb.koding.io:8000";
+        String url = "http://ldsecs193.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.
@@ -65,6 +73,14 @@ public class LoginScreen extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
+                        if (response.contains("authentication successful")){
+                            Intent intent = new Intent(LoginScreen.this, BarMain.class);
+                            startActivity(intent);
+                        }
+                        else if (response.contains("incorrect password")){
+                            Toast incorrectPass = Toast.makeText(getApplicationContext(), "The password you entered was incorrect.", Toast.LENGTH_LONG);
+                            incorrectPass.show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -77,10 +93,11 @@ public class LoginScreen extends AppCompatActivity {
                     }
                 }
         ){
-            //TODO: What is getParams for? How do we change it from needing a hardcoded string?
+
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
+                params.put("type", "login");
                 params.put("user", username);
                 params.put("pass", password);
                 return params;

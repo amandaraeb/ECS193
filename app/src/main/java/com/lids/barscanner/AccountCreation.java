@@ -1,11 +1,15 @@
 package com.lids.barscanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -22,14 +26,23 @@ public class AccountCreation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acc_create_screen);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Atelier Omega.ttf");
+        TextView titleName = (TextView) findViewById(R.id.TFlogin_title);
+        titleName.setTypeface(font);
     }
     //back button
     public void OnClick(View v) {
+        //Android device manager -> data/data/com.lids.barscanner/shared_prefs/Accounts.xml
+        //To view xml file, navigate to the file then press the floppy disk icon at the top right
+        //saying "pull a file from the device" and save to the project.
+        SharedPreferences sharedpreferences = getSharedPreferences("Accounts", Context.MODE_PRIVATE);
         if (v.getId() == R.id.CreateBckButton) {
             Intent intent = new Intent(AccountCreation.this, LoginScreen.class);
             startActivity(intent);
         }
         else if (v.getId() == R.id.CreateAccount) {
+
             EditText TFid = (EditText)findViewById(R.id.Username);
             EditText TFpass = (EditText)findViewById(R.id.Password1);
             EditText TFpassConf = (EditText)findViewById(R.id.Password2);
@@ -37,17 +50,13 @@ public class AccountCreation extends AppCompatActivity {
             String TFpass_str= TFpass.getText().toString();                 //Password String
             String TFpassConf_str = TFpassConf.getText().toString();        //Password Confirm String
 
-            //if password == password confirmation
-            if(TFpass_str.equals(TFpassConf_str)) {
-                Intent intent = new Intent(AccountCreation.this, BarMain.class);
-                startActivity(intent);
-            }
-
-            else
-            {
+            // User must confirm password
+            if (!TFpass_str.equals(TFpassConf_str)) {
                 Toast Fail = Toast.makeText(AccountCreation.this, "Passwords Do Not Match", Toast.LENGTH_SHORT);
                 Fail.show();
             }
+            else
+                HttpPOSTRequest(TFid_str, TFpass_str);
 
         }
 
@@ -55,7 +64,7 @@ public class AccountCreation extends AppCompatActivity {
 
     private void HttpPOSTRequest(final String username, final String password) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://amandaraeb.koding.io:8000";
+        String url = "http://ldsecs193.koding.io:8000";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.
@@ -63,6 +72,16 @@ public class AccountCreation extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("Response", response);
+                        if (response.contains("account added successfully")){
+                            Intent intent = new Intent(AccountCreation.this, LoginScreen.class);
+                            intent.putExtra("newUsername", username);
+                            intent.putExtra("newPassword", password);
+                            startActivity(intent);
+                        }
+                        else if (response.contains("username already exists")){
+                            Toast alreadyExists = Toast.makeText(getApplicationContext(), "That username already exists.", Toast.LENGTH_LONG);
+                            alreadyExists.show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -75,12 +94,12 @@ public class AccountCreation extends AppCompatActivity {
                     }
                 }
         ){
-            //TODO: What is getParams for? How do we change it from needing a hardcoded string?
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("user", username);
-                params.put("pass", password);
+                params.put("type", "createAcct");
+                params.put("newUser", username);
+                params.put("newPass", password);
                 return params;
             }
         };

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@drawable/background">
 
     <TextView
         android:layout_width="wrap_content"
@@ -17,7 +17,8 @@
         android:layout_marginStart="58dp"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,30 +34,33 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/ConfigBackBtn"
-        android:layout_toRightOf="@+id/ConfigBackBtn" />
+        android:layout_toRightOf="@+id/ConfigBackBtn"
+        android:textColor="#FFFFFF" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:text="Configure"
         android:id="@+id/configButton"
         android:onClick="OnButtonClick"
-        android:layout_marginTop="67dp"
+        android:layout_marginTop="73dp"
+        android:layout_marginLeft="43dp"
+        android:layout_marginStart="43dp"
+        android:background="@drawable/button_design"
         android:layout_below="@+id/TFport"
         android:layout_toRightOf="@+id/defaultButton"
-        android:layout_toEndOf="@+id/defaultButton"
-        android:layout_marginLeft="70dp"
-        android:layout_marginStart="70dp" />
+        android:layout_toEndOf="@+id/defaultButton" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:text="Default"
         android:id="@+id/defaultButton"
         android:onClick="OnButtonClick"
         android:layout_alignTop="@+id/configButton"
         android:layout_alignLeft="@+id/textView3"
-        android:layout_alignStart="@+id/textView3" />
+        android:layout_alignStart="@+id/textView3"
+        android:background="@drawable/button_design" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -65,13 +69,12 @@
         android:ems="5"
         android:id="@+id/TFport"
         android:maxLength="5"
-        android:layout_alignTop="@+id/textView3"
-        android:layout_alignLeft="@+id/TFdomain"
-        android:layout_alignRight="@+id/configButton"
-        android:layout_alignEnd="@+id/configButton"
-        android:layout_alignParentTop="false"
         android:layout_alignWithParentIfMissing="false"
-        android:paddingRight="10dp" />
+        android:paddingRight="10dp"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/TFdomain"
+        android:layout_alignStart="@+id/TFdomain"
+        android:textColor="#FFFFFF" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -87,7 +90,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Domain"
-            android:id="@+id/textView4" />
+            android:id="@+id/textView4"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 
@@ -99,7 +103,8 @@
         android:layout_toRightOf="@+id/defaultButton"
         android:layout_alignRight="@+id/linearLayout"
         android:layout_alignEnd="@+id/linearLayout"
-        android:paddingRight="25dp" />
+        android:paddingRight="25dp"
+        android:textColor="#FFFFFF" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -111,11 +116,11 @@
         android:layout_toStartOf="@+id/linearLayout"
         android:layout_alignParentTop="true"
         android:onClick="OnButtonClick"
-        android:src="@mipmap/back"
         android:nestedScrollingEnabled="false"
         android:scaleType="fitXY"
         android:layout_toLeftOf="@+id/linearLayout"
-        android:background="#FFFFFF" />
+        android:background="#00000000"
+        android:src="@mipmap/back_arrow" />
 
 
 </RelativeLayout>
