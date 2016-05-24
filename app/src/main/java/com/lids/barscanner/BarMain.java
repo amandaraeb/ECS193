@@ -27,6 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //ZXing imports
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -45,6 +47,9 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -61,7 +66,6 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
     private Button scanBtn, sendBtn;
     private TextView formatTxt, contentTxt;
     private GoogleApiClient client;
-
 
     //Android device manager -> data/data/com.lids.barscanner/shared_prefs/ScanHistory.xml
     //To view xml file, navigate to the file then press the floppy disk icon at the top right
@@ -174,8 +178,52 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-
     public void SelectResult(String content) {
+        // JsonArrayRequest
+        //create a List of Maps holding <title, info> pairs
+        final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        final String URL = "http://ldsecs193.koding.io:8000";
+        StringRequest req = new StringRequest(Method.GET, URL, new Response.Listener<String>(){
+            @Override
+            public void onResponse(String json) {
+                try {
+                    // Get JSON Array
+                    JSONArray oclcEntries = new JSONArray(json);
+
+                    // Loop through all entries
+                    for(int i = 0; i < oclcEntries.length(); i++) {
+                        JSONObject entry = oclcEntries.getJSONObject(i);
+                        String oclc = entry.getString("oclc");
+                        String title = entry.getString("title");
+                        String author = entry.getString("author");
+                        String publisher = entry.getString("publisher");
+
+                        //Create some temp maps holding OCLC book data
+                        final Map<String, String> datum = new HashMap<String, String>(2);
+
+                        datum.put("title", title);
+                        datum.put("author", author);
+                        datum.put("publisher", publisher);
+                        datum.put("oclc", oclc);
+
+                        // add datum to data list
+                        data.add(datum);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+
+        queue.add(req);
+
         //load history file
         final SharedPreferences sharedpreferences = getSharedPreferences(ScanHistory, Context.MODE_PRIVATE);
 
@@ -186,7 +234,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         alertDialog.setView(convertView);
         alertDialog.setTitle("           Select OCLC ISBN");
         ListView lv = (ListView) convertView.findViewById(R.id.listView1);      //grab list from xml
-
+    /*
         //create a List of Maps holding <title, info> pairs
         final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
         //Create some temp maps holding OCLC book data
@@ -206,7 +254,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         datum4.put("title", "300381010");
         datum4.put("info","Curves and Surfaces, Gerald E Farin\nSan Francisco Calif:M Kaufmann,©2002");
         data.add(datum4);
-
+*/
         //add Maps to the display list
         SimpleAdapter adapter = new SimpleAdapter(this, data,
                 android.R.layout.simple_list_item_2,
