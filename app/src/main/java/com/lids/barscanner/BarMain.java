@@ -220,7 +220,14 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e("Error: ", error.getMessage());
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("type", "oclc");
+                return params;
+            }
+        };
 
         queue.add(req);
 
