@@ -55,10 +55,10 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-
+import java.util.Set;
 
 public class BarMain extends AppCompatActivity implements View.OnClickListener{
 
@@ -179,16 +179,24 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void SelectResult(String content) {
+        final String sendISBN = content;
+        //display loading spinner
+        final ProgressBar spinner;
+        spinner=(ProgressBar)findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
+
         // JsonArrayRequest
         //create a List of Maps holding <title, info> pairs
         final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        Map<String, String> params;
 
         RequestQueue queue = Volley.newRequestQueue(this);
         final String URL = "http://ldsecs193.koding.io:8000";
-        StringRequest req = new StringRequest(Method.GET, URL, new Response.Listener<String>(){
+        StringRequest req = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>(){
             @Override
             public void onResponse(String json) {
-                try {
+                try{
+                    Log.d("Response", json);
                     // Get JSON Array
                     JSONArray oclcEntries = new JSONArray(json);
 
@@ -204,27 +212,40 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                         final Map<String, String> datum = new HashMap<String, String>(2);
 
                         datum.put("title", title);
+                        Log.d("Response", title);
+
                         datum.put("author", author);
+                        Log.d("Response", author);
+
                         datum.put("publisher", publisher);
+                        Log.d("Response", publisher);
+
                         datum.put("oclc", oclc);
+                        Log.d("Response", oclc);
 
                         // add datum to data list
                         data.add(datum);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }
+                catch (JSONException e){
+                    throw new RuntimeException(e);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
+                spinner.setVisibility(View.INVISIBLE);
+                Log.d("ERROR", "error => " + error.toString());
+                Toast sendError = Toast.makeText(getApplicationContext(), "OCLC failed to send: ".concat(error.toString()), Toast.LENGTH_LONG);
+                sendError.show();
             }
-        }) {
+        }
+        ) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("type", "oclc");
+                params.put("isbn", sendISBN);
                 return params;
             }
         };
@@ -241,7 +262,8 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         alertDialog.setView(convertView);
         alertDialog.setTitle("           Select OCLC ISBN");
         ListView lv = (ListView) convertView.findViewById(R.id.listView1);      //grab list from xml
-    /*
+
+/*
         //create a List of Maps holding <title, info> pairs
         final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
         //Create some temp maps holding OCLC book data
