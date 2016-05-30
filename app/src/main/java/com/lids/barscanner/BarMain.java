@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -119,36 +121,48 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         //settings button Requires Administrative permission
         else if (v.getId() == R.id.settings_button) {
 
-            //pop up screen
-            final EditText password = new EditText(this);
-            new AlertDialog.Builder(this)
-                    .setTitle("Admin Password Required")
-                    .setMessage("Password")
-                    .setPositiveButton("Enter", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            String pass = password.getText().toString();
-                            if (pass.equals("default")) {
-                                Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
-                                startActivity(intent);
-                            } else {
-                                Toast loginError = Toast.makeText(BarMain.this, "Incorrect password", Toast.LENGTH_SHORT);
-                                loginError.show();
-                            }
-                        }
-                    })
-                    //temporary skip function
-                    .setNeutralButton("Skip", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
-                    startActivity(intent);
-                }
-            })
-            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                        }
-                    })
-                            .show();
+            LayoutInflater li = LayoutInflater.from(this);
+            View promptsView = li.inflate(R.layout.admin_prompt, null);
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+
+            alertDialogBuilder.setView(promptsView);
+
+            final EditText userInput = (EditText) promptsView
+                    .findViewById(R.id.editTextDialogUserInput);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("Enter",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    String pass= userInput.getText().toString();
+                                    if (pass.equals("default")) {
+                                        Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast loginError = Toast.makeText(BarMain.this, "Incorrect password", Toast.LENGTH_SHORT);
+                                        loginError.show();
+                                    }
+                                }
+                            })
+                    .setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
         }
+
 
         //Search History
         else if (v.getId() == R.id.history_button) {
@@ -162,6 +176,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
 
 
             String isbn = contentTxt.getText().toString().replace("ISBN: ", "");
+            //isbn = "9780545010221";
             //isbn = "123456789"; //dummy isbn for testing on virtual phone
             // If the TextView is empty, warn the user and do nothing
             if(isbn.equals("")){
@@ -173,7 +188,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                 //function call will have to be moved somewhere else once WorldCat parsing is implemented
                 SelectResult(isbn);     //Function for selecting from returned list of WorldCat ISBN's
 
-                //HttpPOSTRequest(isbn);
+                 //HttpPOSTRequest(isbn);
             }
         }
     }
@@ -207,27 +222,32 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                         String title = entry.getString("title");
                         String author = entry.getString("author");
                         String publisher = entry.getString("publisher");
-
+                        String info = title.concat(author).concat(publisher);
                         //Create some temp maps holding OCLC book data
                         final Map<String, String> datum = new HashMap<String, String>(2);
 
-                        datum.put("title", title);
-                        Log.d("Response", title);
+                        //datum.put("title", title);
+                        //Log.d("Response", title);
 
-                        datum.put("author", author);
-                        Log.d("Response", author);
+                        //datum.put("author", author);
+                        //Log.d("Response", author);
 
-                        datum.put("publisher", publisher);
-                        Log.d("Response", publisher);
+                        //datum.put("publisher", publisher);
+                        //Log.d("Response", publisher);
+
+                        datum.put("info", info);
+                        Log.d("Response", info);
 
                         datum.put("oclc", oclc);
                         Log.d("Response", oclc);
 
                         // add datum to data list
                         data.add(datum);
+
                     }
                 }
                 catch (JSONException e){
+
                     throw new RuntimeException(e);
                 }
             }
@@ -260,34 +280,37 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate(R.layout.worldcat_isbn_list, null);  //specify xml file for layout
         alertDialog.setView(convertView);
-        alertDialog.setTitle("           Select OCLC ISBN");
+        TextView title = new TextView(this);
+        // You Can Customise your Title here
+        title.setText("Select OCLC ISBN");
+        title.setBackgroundColor(Color.parseColor("#474242"));
+        title.setPadding(10, 10, 10, 10);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.parseColor("#eacda3"));
+        title.setTextSize(20);
+        alertDialog.setCustomTitle(title);
+        //alertDialog.setTitle("           Select OCLC ISBN");
         ListView lv = (ListView) convertView.findViewById(R.id.listView1);      //grab list from xml
 
-/*
+
         //create a List of Maps holding <title, info> pairs
-        final List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+       /* final List<Map<String, String>> data2 = new ArrayList<Map<String, String>>();
         //Create some temp maps holding OCLC book data
         final Map<String, String> datum = new HashMap<String, String>(2);
-        datum.put("title", "162596101");
+        datum.put("oclc", "162596101");
         datum.put("info", "Curves and Surfaces, Gerald E Farin\nSan Francisco CA:Morgan Kaufmann\nLondon:Academic Press,©2002");
-        data.add(datum);
+        data2.add(datum);
         Map<String, String> datum2 = new HashMap<String, String>(2);
-        datum2.put("title", "248043606");
+        datum2.put("oclc", "248043606");
         datum2.put("info", "Curves and Surfaces, Gerald Farin\nSan Francisco, Calif:Morgan Kaufmann Publ,2002");
-        data.add(datum2);
-        Map<String, String> datum3 = new HashMap<String, String>(2);
-        datum3.put("title", "254200301");
-        datum3.put("info","Curves and Surfaces, Gerald Farin\nSan Francisco, Calif:Morgan Kaufmann Publ,2006");
-        data.add(datum3);
-        Map<String, String> datum4 = new HashMap<String, String>(2);
-        datum4.put("title", "300381010");
-        datum4.put("info","Curves and Surfaces, Gerald E Farin\nSan Francisco Calif:M Kaufmann,©2002");
-        data.add(datum4);
-*/
+        data2.add(datum2);*/
+
+
         //add Maps to the display list
+        spinner.setVisibility(View.INVISIBLE);
         SimpleAdapter adapter = new SimpleAdapter(this, data,
                 android.R.layout.simple_list_item_2,
-                new String[] {"title", "info"},
+                new String[] {"oclc", "info"}, //title, author?
                 new int[] {android.R.id.text1,
                         android.R.id.text2});
 
@@ -296,15 +319,14 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {       // checks for clicks on ISBN's in the list
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
                 String key;                                 // key for ScanHistory ISBN's
-                Map<String, String> clicked = data.get(position);   //get the <title, info> pair for the position clicked
-                String result = clicked.get("title");               //store the <title> portion holding OCLC number
+                Map<String, String> clicked = data.get(position);   //get the <oclc, info> pair for the position clicked
+                String result = clicked.get("oclc");               //store the <oclc> portion holding OCLC number
                 int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
                 //Save Into History
                 String date = DateFormat.getDateTimeInstance().format(new Date());    // get timestamp
                 String isbn = result + "               " + date;                    // OCLC + timestamp
                 key = Integer.toString(BookCount);
                 BookCount++;
-
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(key, isbn);               // store ("key", "ISBN")
                 editor.putInt(NumberOfBooks, BookCount);   // store # of ISBNs
@@ -373,7 +395,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         spinner.setVisibility(View.VISIBLE);
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://ldsecs193.koding.io:8000";//"http://amandaraeb.koding.io:8000";
+        String url = "http://ldsecs193.koding.io:8000";//http://ldsecs193.koding.io:8000
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.

@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:textAlignment="center"
-    android:paddingEnd="10dp">
+    android:paddingEnd="10dp"
+    android:paddingRight="10dp">
 
     <Button
         android:layout_width="74dp"
@@ -104,7 +105,9 @@
         android:paddingStart="21dp"
         android:password="true"
         android:layout_alignRight="@+id/Username"
-        android:layout_alignEnd="@+id/Username" />
+        android:layout_alignEnd="@+id/Username"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -137,6 +140,7 @@
         android:paddingEnd="21dp"
         android:paddingStart="21dp"
         android:layout_alignRight="@+id/Password1"
-        android:layout_alignEnd="@+id/Password1" />
+        android:layout_alignEnd="@+id/Password1"
+        android:textAlignment="center" />
 
 </RelativeLayout>

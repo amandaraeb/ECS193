@@ -65,7 +65,7 @@ public class LoginScreen extends AppCompatActivity {
 
     private void HttpPOSTRequest(final String username, final String password) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://ldsecs193.koding.io:8000";
+        String url = "http://linkeddata.sxeau2dwtj.us-east-1.elasticbeanstalk.com/";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.
@@ -77,8 +77,8 @@ public class LoginScreen extends AppCompatActivity {
                             Intent intent = new Intent(LoginScreen.this, BarMain.class);
                             startActivity(intent);
                         }
-                        else if (response.contains("incorrect password")){
-                            Toast incorrectPass = Toast.makeText(getApplicationContext(), "The password you entered was incorrect.", Toast.LENGTH_LONG);
+                        else{
+                            Toast incorrectPass = Toast.makeText(getApplicationContext(), "Incorrect Username or Password", Toast.LENGTH_LONG);
                             incorrectPass.show();
                         }
                     }
