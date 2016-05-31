@@ -33,7 +33,7 @@
         android:layout_row="1"
         android:layout_below="@+id/HistClearButton"
         android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFF" />
+        android:textColor="#eacda3" />
 
     <!-- Not Sure if this should be in here
     <TableLayout

@@ -88,7 +88,7 @@ public class LoginScreen extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("ERROR", "error => " + error.toString());
-                        Toast sendError = Toast.makeText(getApplicationContext(), "User info failed to send: ".concat(error.toString()), Toast.LENGTH_LONG);
+                        Toast sendError = Toast.makeText(getApplicationContext(), "User info failed to send: ".concat(error.toString().concat("\nInternet Connection Required")), Toast.LENGTH_LONG);
                         sendError.show();
                     }
                 }

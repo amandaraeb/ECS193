@@ -5,28 +5,41 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:padding="10dp"
-    android:background="@drawable/button_design"
+    android:background="@drawable/background"
     >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="          Admin Password Required"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textAlignment="center"
-        android:textColor="#474242" />
-
-    <EditText
-        android:id="@+id/editTextDialogUserInput"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:password="true"
-        android:textAlignment="center"
-        android:textColor="#474242">
+        android:layout_height="match_parent">
 
-        <requestFocus />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   Admin Password Required"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAlignment="center"
+            android:textColor="#eacda3"
+            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
-    </EditText>
+        <EditText
+            android:id="@+id/editTextDialogUserInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:password="true"
+            android:textAlignment="center"
+            android:textColor="#eacda3"
+            android:layout_gravity="center"
+            android:layout_below="@+id/textView1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <requestFocus />
+
+        </EditText>
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -107,6 +107,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
 
         //If scan_button is clicked, begin scanning
         if (v.getId() == R.id.scan_button) {
+
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
             scanIntegrator.setCaptureActivity(ZxingCapture.class);
             scanIntegrator.setOrientationLocked(false);
@@ -125,7 +126,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
             View promptsView = li.inflate(R.layout.admin_prompt, null);
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                    this, android.R.style.Theme_DeviceDefault_Dialog_Alert);
+                    this);
 
             alertDialogBuilder.setView(promptsView);
 
@@ -143,7 +144,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                                         Intent intent = new Intent(BarMain.this, ConfigurationScreen.class);
                                         startActivity(intent);
                                     } else {
-                                        Toast loginError = Toast.makeText(BarMain.this, "Incorrect password", Toast.LENGTH_SHORT);
+                                        Toast loginError = Toast.makeText(BarMain.this, "Incorrect Password", Toast.LENGTH_SHORT);
                                         loginError.show();
                                     }
                                 }
@@ -176,8 +177,6 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
 
 
             String isbn = contentTxt.getText().toString().replace("ISBN: ", "");
-            //isbn = "9780545010221";
-            //isbn = "123456789"; //dummy isbn for testing on virtual phone
             // If the TextView is empty, warn the user and do nothing
             if(isbn.equals("")){
                 Toast noTextWarning = Toast.makeText(getApplicationContext(), "Nothing to send!", Toast.LENGTH_SHORT);
@@ -185,15 +184,12 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
             }
             // Else there is something to send, so send it.
             else {
-                //function call will have to be moved somewhere else once WorldCat parsing is implemented
-                SelectResult(isbn);     //Function for selecting from returned list of WorldCat ISBN's
-
-                 //HttpPOSTRequest(isbn);
+                GetOCLC(isbn);     //Function for getting the list of WorldCat OCLC's
             }
         }
     }
 
-    public void SelectResult(String content) {
+    public void GetOCLC(String content) {
         final String sendISBN = content;
         //display loading spinner
         final ProgressBar spinner;
@@ -206,7 +202,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         Map<String, String> params;
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        final String URL = "http://ldsecs193.koding.io:8000";
+        final String URL = "http://linkeddata.sxeau2dwtj.us-east-1.elasticbeanstalk.com/";
         StringRequest req = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>(){
             @Override
             public void onResponse(String json) {
@@ -219,21 +215,20 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                     for(int i = 0; i < oclcEntries.length(); i++) {
                         JSONObject entry = oclcEntries.getJSONObject(i);
                         String oclc = entry.getString("oclc");
+                        if(oclc.equals("unknown"))
+                            oclc = "Unknown OCLC";
                         String title = entry.getString("title");
+                        if(title.equals("unknown"))
+                            title = "Unknown Title";
                         String author = entry.getString("author");
+                        if(author.equals("unknown"))
+                            author = "Unknown Author";
                         String publisher = entry.getString("publisher");
-                        String info = title.concat(author).concat(publisher);
+                        if(publisher.equals("unknown"))
+                            publisher = "Unknown Publisher";
+                        String info = title.concat(", ").concat(author).concat(", ").concat(publisher);
                         //Create some temp maps holding OCLC book data
                         final Map<String, String> datum = new HashMap<String, String>(2);
-
-                        //datum.put("title", title);
-                        //Log.d("Response", title);
-
-                        //datum.put("author", author);
-                        //Log.d("Response", author);
-
-                        //datum.put("publisher", publisher);
-                        //Log.d("Response", publisher);
 
                         datum.put("info", info);
                         Log.d("Response", info);
@@ -245,10 +240,19 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                         data.add(datum);
 
                     }
+                    if(data.size() != 0 )   //if no oclc's returned
+                        SelectOCLC(data);   //function to select an oclc from the list generated
+                    else {
+                        spinner.setVisibility(View.INVISIBLE);
+                        Toast sendError = Toast.makeText(getApplicationContext(), "No Records Found For This Book", Toast.LENGTH_LONG);
+                        sendError.show();
+                    }
                 }
-                catch (JSONException e){
-
-                    throw new RuntimeException(e);
+                catch (JSONException e){    //error occurred with finding oclc's
+                    spinner.setVisibility(View.INVISIBLE);
+                    Toast sendError = Toast.makeText(getApplicationContext(), "Unable to Find Valid OCLC's\nWorldCat Book Format Not Supported", Toast.LENGTH_LONG);
+                    sendError.show();
+                    //throw new RuntimeException(e);
                 }
             }
         }, new Response.ErrorListener() {
@@ -271,9 +275,10 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         };
 
         queue.add(req);
-
-        //load history file
-        final SharedPreferences sharedpreferences = getSharedPreferences(ScanHistory, Context.MODE_PRIVATE);
+    }
+    public void SelectOCLC(final List<Map<String, String>> data){
+        final ProgressBar spinner;
+        spinner=(ProgressBar)findViewById(R.id.progressBar);
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final AlertDialog alertDialog = alert.create();
@@ -281,36 +286,21 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         View convertView = (View) inflater.inflate(R.layout.worldcat_isbn_list, null);  //specify xml file for layout
         alertDialog.setView(convertView);
         TextView title = new TextView(this);
-        // You Can Customise your Title here
-        title.setText("Select OCLC ISBN");
+        // Custom title
+        title.setText("Select OCLC Number");
         title.setBackgroundColor(Color.parseColor("#474242"));
         title.setPadding(10, 10, 10, 10);
         title.setGravity(Gravity.CENTER);
         title.setTextColor(Color.parseColor("#eacda3"));
         title.setTextSize(20);
         alertDialog.setCustomTitle(title);
-        //alertDialog.setTitle("           Select OCLC ISBN");
         ListView lv = (ListView) convertView.findViewById(R.id.listView1);      //grab list from xml
-
-
-        //create a List of Maps holding <title, info> pairs
-       /* final List<Map<String, String>> data2 = new ArrayList<Map<String, String>>();
-        //Create some temp maps holding OCLC book data
-        final Map<String, String> datum = new HashMap<String, String>(2);
-        datum.put("oclc", "162596101");
-        datum.put("info", "Curves and Surfaces, Gerald E Farin\nSan Francisco CA:Morgan Kaufmann\nLondon:Academic Press,©2002");
-        data2.add(datum);
-        Map<String, String> datum2 = new HashMap<String, String>(2);
-        datum2.put("oclc", "248043606");
-        datum2.put("info", "Curves and Surfaces, Gerald Farin\nSan Francisco, Calif:Morgan Kaufmann Publ,2002");
-        data2.add(datum2);*/
-
 
         //add Maps to the display list
         spinner.setVisibility(View.INVISIBLE);
         SimpleAdapter adapter = new SimpleAdapter(this, data,
                 android.R.layout.simple_list_item_2,
-                new String[] {"oclc", "info"}, //title, author?
+                new String[] {"oclc", "info"},
                 new int[] {android.R.id.text1,
                         android.R.id.text2});
 
@@ -318,21 +308,10 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         alertDialog.show();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {       // checks for clicks on ISBN's in the list
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                String key;                                 // key for ScanHistory ISBN's
                 Map<String, String> clicked = data.get(position);   //get the <oclc, info> pair for the position clicked
-                String result = clicked.get("oclc");               //store the <oclc> portion holding OCLC number
-                int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
-                //Save Into History
-                String date = DateFormat.getDateTimeInstance().format(new Date());    // get timestamp
-                String isbn = result + "               " + date;                    // OCLC + timestamp
-                key = Integer.toString(BookCount);
-                BookCount++;
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putString(key, isbn);               // store ("key", "ISBN")
-                editor.putInt(NumberOfBooks, BookCount);   // store # of ISBNs
-                editor.apply();
+                String oclc = clicked.get("oclc");               //store the <oclc> portion holding OCLC number
                 alertDialog.cancel();                      // remove the popup
-                HttpPOSTRequest(result);
+                HttpPOSTRequest(oclc);
             }
         });
 
@@ -352,6 +331,18 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
             //Display values
             formatTxt.setText("FORMAT: ".concat(scanFormat));
             contentTxt.setText("ISBN: ".concat(scanContent));
+
+            //automatic sending of ISBN after a scan
+            String isbn = contentTxt.getText().toString().replace("ISBN: ", "");
+            // If the TextView is empty, warn the user and do nothing
+            if(isbn.equals("")){
+                Toast noTextWarning = Toast.makeText(getApplicationContext(), "Nothing to send!", Toast.LENGTH_SHORT);
+                noTextWarning.show();
+            }
+            // Else there is something to send, so send it.
+            else {
+                GetOCLC(isbn);     //Function for getting the list of WorldCat OCLC's
+            }
         }
         //Else, display the warning Toast
         else {
@@ -388,6 +379,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
 
     // Custom StringRequest override.
     private void HttpPOSTRequest(String content) {
+        final SharedPreferences sharedpreferences = getSharedPreferences(ScanHistory, Context.MODE_PRIVATE);
         final String sendISBN = content;
         //display loading spinner
         final ProgressBar spinner;
@@ -395,7 +387,7 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
         spinner.setVisibility(View.VISIBLE);
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://ldsecs193.koding.io:8000";//http://ldsecs193.koding.io:8000
+        String url = "http://linkeddata.sxeau2dwtj.us-east-1.elasticbeanstalk.com/";//http://ldsecs193.koding.io:8000
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.
@@ -405,6 +397,32 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                         Log.d("Response", response);
                         if (response.contains("added")) {
                             Toast sendSuccess = Toast.makeText(getApplicationContext(), "ISBN successfully sent!", Toast.LENGTH_SHORT);
+
+                            //store into history
+                            String key;
+                            int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
+                            //Save Into History
+                            String date = DateFormat.getDateTimeInstance().format(new Date());      // get timestamp
+                            String result = sendISBN;
+                            //formatting attempt to make all entries as equal in length as possible
+                            if(result.length() < 8)
+                                result = result + "                    ";
+                            else if(result.length() == 8)
+                                result = result + "                 ";
+                            else if(result.length() == 9)
+                                result = result + "               ";
+                            else if(result.length() == 10)
+                                result = result + "             ";
+                            else if(result.length() > 10)
+                                result = result + "           ";
+                            result = result + date;             // OCLC + timestamp
+
+                            key = Integer.toString(BookCount);
+                            BookCount++;
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString(key, result);               // store ("key", "ISBN")
+                            editor.putInt(NumberOfBooks, BookCount);   // store # of ISBNs
+                            editor.apply();
 
                             Animation fadeIn = new AlphaAnimation(0, 1);
                             final Animation fadeOut = new AlphaAnimation(1, 0);
@@ -428,9 +446,14 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                             }, 2000);
 
                         }
+                        else if(response.contains("isbn old")){
+                            spinner.setVisibility(View.INVISIBLE);
+                            Toast sendFailure = Toast.makeText(getApplicationContext(), "ISBN Already In Database", Toast.LENGTH_LONG);
+                            sendFailure.show();
+                        }
                         else{
                             spinner.setVisibility(View.INVISIBLE);
-                            Toast sendFailure = Toast.makeText(getApplicationContext(), "Server unable to send ISBN!", Toast.LENGTH_LONG);
+                            Toast sendFailure = Toast.makeText(getApplicationContext(), "Server Unable to Send ISBN", Toast.LENGTH_LONG);
                             sendFailure.show();
                         }
                     }

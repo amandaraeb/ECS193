@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">BarScanner</string>
     <string name="scan">Scan</string>
-    <string name="sendIsbn">Send ISBN</string>
+    <string name="sendIsbn">Resend ISBN</string>
 </resources>
