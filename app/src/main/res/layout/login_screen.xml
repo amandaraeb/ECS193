@@ -36,7 +36,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textSize="35dp"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="25dp" />
 
     <Button
         android:layout_width="match_parent"
@@ -121,11 +121,13 @@
         android:layout_alignLeft="@+id/TFpassword"
         android:layout_alignStart="@+id/TFpassword"
         android:paddingLeft="5dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp" /><![CDATA[
+
     android:background="#FFFFFF"
         android:layout_alignTop="@+id/TFusername"
         android:layout_alignLeft="@+id/TFusern
     ame"
         android:layout_alignStart="@+id/TFusername" />
 
+]]>
 </RelativeLayout>
