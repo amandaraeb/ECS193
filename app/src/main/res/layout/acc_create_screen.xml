@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:textAlignment="center"
-    android:paddingEnd="10dp">
+    android:paddingEnd="10dp"
+    android:paddingRight="10dp">
 
     <Button
         android:layout_width="74dp"
@@ -20,11 +21,15 @@
         android:text="Create Account"
         android:id="@+id/CreateAccount"
         android:onClick="OnClick"
-        android:layout_marginBottom="74dp"
         android:background="@drawable/button_design"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/textView5"
-        android:layout_alignStart="@+id/textView5" />
+        android:layout_marginBottom="89dp"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_marginLeft="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="15dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -32,15 +37,15 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Link Data Scanner"
         android:id="@+id/TFlogin_title"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_alignWithParentIfMissing="false"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="false"
         android:padding="30dp"
         android:textColor="#FFFFFF"
         android:textAlignment="center"
-        android:textSize="35dp" />
+        android:textSize="35dp"
+        android:layout_below="@+id/CreateBckButton"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_marginTop="-10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,7 +77,7 @@
 
     <EditText
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:id="@+id/Username"
         android:background="@drawable/textbox"
         android:singleLine="true"
@@ -89,7 +94,7 @@
 
     <EditText
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:inputType="textPassword"
         android:ems="10"
         android:background="@drawable/textbox"
@@ -103,7 +108,9 @@
         android:paddingStart="21dp"
         android:password="true"
         android:layout_alignRight="@+id/Username"
-        android:layout_alignEnd="@+id/Username" />
+        android:layout_alignEnd="@+id/Username"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -123,7 +130,7 @@
 
     <EditText
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:background="@drawable/textbox"
         android:inputType="textPassword"
         android:ems="10"
@@ -136,6 +143,17 @@
         android:paddingEnd="21dp"
         android:paddingStart="21dp"
         android:layout_alignRight="@+id/Password1"
-        android:layout_alignEnd="@+id/Password1" />
+        android:layout_alignEnd="@+id/Password1"
+        android:textAlignment="center" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView5"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/book_1"
+        android:layout_marginTop="60dp"
+        android:layout_above="@+id/Username"
+        android:layout_marginBottom="50dp" />
 
 </RelativeLayout>

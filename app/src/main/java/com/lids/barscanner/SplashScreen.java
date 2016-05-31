@@ -17,14 +17,18 @@ public class SplashScreen extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Check is to make sure splash screen only loads once during application creation and does not
+        // repeat in case user presses back button or presses home button
         if (!splashLoaded) {
             setContentView(R.layout.splash_screen);
 
+            // Fade in and out animation for "loading" text
             final Animation fade = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_out);
             final TextView textView = (TextView) findViewById(R.id.splash_load);
             textView.bringToFront();
             textView.startAnimation(fade);
 
+            // Following code animates pages in the book through frame by frame animation
             final ImageView book_anim = (ImageView) findViewById(R.id.book_animation);
             book_anim.setImageResource(R.drawable.book_1);
 
@@ -150,11 +154,14 @@ public class SplashScreen extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     book_anim.setImageResource(R.drawable.book_5);
+                    // Start activity
                     startActivity(new Intent(SplashScreen.this, LoginScreen.class));
                 }
             }, 6000);
 
             splashLoaded = true;
+
+        // If splash screen has already been shown, directly go to main activity
         } else {
             Intent goToMainActivity = new Intent(SplashScreen.this, LoginScreen.class);
             goToMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

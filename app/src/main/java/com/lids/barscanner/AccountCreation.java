@@ -33,10 +33,6 @@ public class AccountCreation extends AppCompatActivity {
     }
     //back button
     public void OnClick(View v) {
-        //Android device manager -> data/data/com.lids.barscanner/shared_prefs/Accounts.xml
-        //To view xml file, navigate to the file then press the floppy disk icon at the top right
-        //saying "pull a file from the device" and save to the project.
-        SharedPreferences sharedpreferences = getSharedPreferences("Accounts", Context.MODE_PRIVATE);
         if (v.getId() == R.id.CreateBckButton) {
             Intent intent = new Intent(AccountCreation.this, LoginScreen.class);
             startActivity(intent);
@@ -51,7 +47,15 @@ public class AccountCreation extends AppCompatActivity {
             String TFpassConf_str = TFpassConf.getText().toString();        //Password Confirm String
 
             // User must confirm password
-            if (!TFpass_str.equals(TFpassConf_str)) {
+            if(TFid_str.length() == 0) {
+                Toast Fail = Toast.makeText(AccountCreation.this, "Please Enter a Non-Empty Username", Toast.LENGTH_SHORT);
+                Fail.show();
+            }
+            else if(TFpass_str.length() == 0){
+                Toast Fail = Toast.makeText(AccountCreation.this, "Please Enter a Non-Empty Password", Toast.LENGTH_SHORT);
+                Fail.show();
+            }
+            else if (!TFpass_str.equals(TFpassConf_str)) {
                 Toast Fail = Toast.makeText(AccountCreation.this, "Passwords Do Not Match", Toast.LENGTH_SHORT);
                 Fail.show();
             }
@@ -64,7 +68,7 @@ public class AccountCreation extends AppCompatActivity {
 
     private void HttpPOSTRequest(final String username, final String password) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://ldsecs193.koding.io:8000";
+        String url = "http://linkeddata.sxeau2dwtj.us-east-1.elasticbeanstalk.com/";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.

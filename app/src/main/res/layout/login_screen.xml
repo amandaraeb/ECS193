@@ -6,7 +6,7 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:text="Login"
         android:id="@+id/LoginButton"
         android:layout_gravity="center_vertical"
@@ -16,6 +16,8 @@
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
         android:layout_below="@+id/TFpassword"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="15dp"
@@ -33,14 +35,16 @@
         android:textAlignment="center"
         android:textStyle="bold|italic"
         android:width="300dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:textSize="35dp"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="15dp" />
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:text="Create New Account"
         android:id="@+id/creationButton"
         android:onClick="onButtonClick"
@@ -51,7 +55,7 @@
         android:layout_below="@+id/LoginButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp" />
 
@@ -66,7 +70,7 @@
         android:layout_below="@+id/TFlogin_title"
         android:textAlignment="center"
         android:paddingRight="10dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="80dp"
         android:layout_alignLeft="@+id/useless"
         android:layout_alignStart="@+id/useless"
         android:editable="false"
@@ -121,13 +125,18 @@
         android:layout_alignLeft="@+id/TFpassword"
         android:layout_alignStart="@+id/TFpassword"
         android:paddingLeft="5dp"
-        android:layout_marginTop="5dp" /><![CDATA[
+        android:layout_marginTop="5dp" />
 
-    android:background="#FFFFFF"
-        android:layout_alignTop="@+id/TFusername"
-        android:layout_alignLeft="@+id/TFusern
-    ame"
-        android:layout_alignStart="@+id/TFusername" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView6"
+        android:src="@drawable/book_1"
+        android:layout_alignLeft="@+id/LoginButton"
+        android:layout_alignStart="@+id/LoginButton"
+        android:layout_above="@+id/imageView"
+        android:layout_alignTop="@+id/TFlogin_title"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="25dp" />
 
-]]>
 </RelativeLayout>

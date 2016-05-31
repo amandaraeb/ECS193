@@ -4,7 +4,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/logo"
+        android:icon="@mipmap/logo1"
         android:label=""
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -22,10 +22,14 @@
             android:configChanges="orientation|screenSize"
             >
         </activity>
-        <activity android:name=".LoginScreen" />
-        <activity android:name=".AccountCreation" />
-        <activity android:name=".ConfigurationScreen" />
-        <activity android:name=".SearchHistoryScreen" />
+        <activity android:name=".LoginScreen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".AccountCreation"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".ConfigurationScreen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".SearchHistoryScreen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".ZxingCapture"
             android:screenOrientation="fullSensor"

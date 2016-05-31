@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +66,7 @@ public class LoginScreen extends AppCompatActivity {
 
     private void HttpPOSTRequest(final String username, final String password) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://ldsecs193.koding.io:8000";
+        String url = "http://linkeddata.sxeau2dwtj.us-east-1.elasticbeanstalk.com/";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     // This code is executed if the server responds.
@@ -77,8 +78,8 @@ public class LoginScreen extends AppCompatActivity {
                             Intent intent = new Intent(LoginScreen.this, BarMain.class);
                             startActivity(intent);
                         }
-                        else if (response.contains("incorrect password")){
-                            Toast incorrectPass = Toast.makeText(getApplicationContext(), "The password you entered was incorrect.", Toast.LENGTH_LONG);
+                        else{
+                            Toast incorrectPass = Toast.makeText(getApplicationContext(), "Incorrect Username or Password", Toast.LENGTH_LONG);
                             incorrectPass.show();
                         }
                     }
@@ -88,7 +89,7 @@ public class LoginScreen extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("ERROR", "error => " + error.toString());
-                        Toast sendError = Toast.makeText(getApplicationContext(), "User info failed to send: ".concat(error.toString()), Toast.LENGTH_LONG);
+                        Toast sendError = Toast.makeText(getApplicationContext(), "User info failed to send: ".concat(error.toString().concat("\nInternet Connection Required")), Toast.LENGTH_LONG);
                         sendError.show();
                     }
                 }
