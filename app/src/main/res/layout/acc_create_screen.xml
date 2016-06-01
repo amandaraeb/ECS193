@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Link Data Scanner"
+        android:text="Linked Data Scanner"
         android:id="@+id/TFlogin_title"
         android:layout_alignWithParentIfMissing="false"
         android:padding="30dp"
