@@ -448,6 +448,31 @@ public class BarMain extends AppCompatActivity implements View.OnClickListener{
                         }
                         else if(response.contains("isbn old")){
                             spinner.setVisibility(View.INVISIBLE);
+                            //store into history
+                            String key;
+                            int BookCount = sharedpreferences.getInt("NumberOfBooks", 0);
+                            //Save Into History
+                            String date = DateFormat.getDateTimeInstance().format(new Date());      // get timestamp
+                            String result = sendISBN;
+                            //formatting attempt to make all entries as equal in length as possible
+                            if(result.length() < 8)
+                                result = result + "                    ";
+                            else if(result.length() == 8)
+                                result = result + "                 ";
+                            else if(result.length() == 9)
+                                result = result + "               ";
+                            else if(result.length() == 10)
+                                result = result + "             ";
+                            else if(result.length() > 10)
+                                result = result + "           ";
+                            result = result + date;             // OCLC + timestamp
+
+                            key = Integer.toString(BookCount);
+                            BookCount++;
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString(key, result);               // store ("key", "ISBN")
+                            editor.putInt(NumberOfBooks, BookCount);   // store # of ISBNs
+                            editor.apply();
                             Toast sendFailure = Toast.makeText(getApplicationContext(), "ISBN Already In Database", Toast.LENGTH_LONG);
                             sendFailure.show();
                         }
