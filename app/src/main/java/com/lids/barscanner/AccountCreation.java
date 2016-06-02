@@ -23,6 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccountCreation extends AppCompatActivity {
+
+    @Override
+    public void onBackPressed(){}
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acc_create_screen);

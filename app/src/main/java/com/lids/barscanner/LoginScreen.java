@@ -24,6 +24,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginScreen extends AppCompatActivity {
+
+    @Override
+    public void onBackPressed(){}
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_screen);

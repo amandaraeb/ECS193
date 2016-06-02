@@ -12,6 +12,9 @@ public class ConfigurationScreen extends AppCompatActivity {
 
     //private Button configBtn;
 
+    @Override
+    public void onBackPressed(){}
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.config_screen);

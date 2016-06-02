@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 public class SearchHistoryScreen extends AppCompatActivity{
 
+    @Override
+    public void onBackPressed(){}
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

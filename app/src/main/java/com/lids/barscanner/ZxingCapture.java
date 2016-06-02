@@ -5,7 +5,7 @@ import com.journeyapps.barcodescanner.CaptureActivity;
 
 // Empty CaptureActivity for BarMain
 public class ZxingCapture extends CaptureActivity {
-    //Disable back button during scanning (causes crash)
+    //Override back button. (Causes crash otherwise)
     @Override
     public void onBackPressed(){
         Intent intent = new Intent(ZxingCapture.this, BarMain.class);
