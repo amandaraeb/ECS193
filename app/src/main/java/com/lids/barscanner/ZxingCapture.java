@@ -2,4 +2,8 @@ package com.lids.barscanner;
 import com.journeyapps.barcodescanner.CaptureActivity;
 
 // Empty CaptureActivity for BarMain
-public class ZxingCapture extends CaptureActivity {}
+public class ZxingCapture extends CaptureActivity {
+    //Disable back button during scanning (causes crash)
+    @Override
+    public void onBackPressed(){}
+}
